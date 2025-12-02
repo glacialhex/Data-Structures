@@ -1,0 +1,113 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║         PERSON 3 - SEARCH OPERATION QUICK REFERENCE               ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+📁 FILES YOU NEED TO EDIT:
+   └─ RadixTree.cpp (lines ~60-140)
+
+📁 FILES TO REFERENCE (don't edit):
+   ├─ RadixTree.h (declarations already done)
+   ├─ Node.h (understand the structures)
+   └─ PERSON3_SEARCH_GUIDE.md (detailed guide)
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 YOUR 5 FUNCTIONS:
+
+1️⃣  SearchResult search(Node* root, const char* key)
+    → Main entry point, orchestrates the search
+    → Return: SearchResult{found, node, reason}
+
+2️⃣  Node* traverseEdge(Node* node, const char* keySegment, int& matchedLength)
+    → Find matching child and navigate to it
+    → Return: child node or nullptr
+
+3️⃣  int matchPrefix(const char* nodePrefix, const char* keySegment)
+    → Count matching characters
+    → Return: number of matches
+
+4️⃣  bool isKeyFullyMatched(Node* node, const char* key)
+    → Verify complete word found
+    → Return: true if key consumed AND node->ended == true
+
+5️⃣  SearchResult handleSearchFailure(const char* reason)
+    → Create failure result with reason
+    → Return: SearchResult with found=false
+
+═══════════════════════════════════════════════════════════════════
+
+📊 KEY DATA STRUCTURES:
+
+struct Node {
+    char data[50];      // edge label (the compressed prefix)
+    bool ended;         // true = valid word endpoint
+    child* children;    // linked list of children
+};
+
+struct child {
+    char firstChar;     // first char of child's label
+    Node* node;         // pointer to child node
+    child* next;        // next sibling
+};
+
+struct SearchResult {
+    bool found;         // search success?
+    Node* node;         // found node
+    const char* reason; // failure explanation
+};
+
+═══════════════════════════════════════════════════════════════════
+
+🔄 SEARCH ALGORITHM FLOW:
+
+   search("test")
+        ↓
+   Start at root
+        ↓
+   traverseEdge → find child with 't'
+        ↓
+   matchPrefix → how many chars match?
+        ↓
+   Advance to child node
+        ↓
+   Repeat until key consumed
+        ↓
+   isKeyFullyMatched → check ended flag
+        ↓
+   Return SearchResult
+
+═══════════════════════════════════════════════════════════════════
+
+💡 IMPLEMENTATION TIPS:
+
+✓ Start with simplest functions (matchPrefix, handleSearchFailure)
+✓ Iterate children: child* c = node->children; while(c) {...; c = c->next;}
+✓ Always check nullptr before dereferencing
+✓ Remember: finding prefix ≠ finding word (check ended flag!)
+✓ Use descriptive failure reasons for debugging
+
+═══════════════════════════════════════════════════════════════════
+
+🧪 TESTING EXAMPLE (add to Main.cpp):
+
+RadixTree tree;
+// After inserting words...
+SearchResult result = tree.search(tree.myRoot, "test");
+if (result.found) {
+    std::cout << "✓ Found: " << result.node->data << std::endl;
+} else {
+    std::cout << "✗ Not found: " << result.reason << std::endl;
+}
+
+═══════════════════════════════════════════════════════════════════
+
+⚠️  COMMON MISTAKES TO AVOID:
+
+✗ Forgetting to check node->ended flag
+✗ Not handling empty tree case
+✗ Incorrect linked list traversal
+✗ Off-by-one errors in string comparison
+✗ Not advancing key pointer after partial match
+
+═══════════════════════════════════════════════════════════════════
+
