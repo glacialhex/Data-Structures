@@ -2,6 +2,9 @@
 // RadixTree.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+// RadixTree.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+#include <cstring>
 #include "RadixTree.h"
 
 	RadixTree::RadixTree(){
@@ -35,12 +38,34 @@
 			return;
 		}
 		//case 3:common  prefix found
-		child* cur = myroot->children;
+		child* cur = myRoot->children;
 		bool foundPrefix = false;
 		Node* current = myRoot;
 		while (cur != nullptr) {
 			int pref = SearchPrefix(cur->node->data, word);
-			if (pref> 0) {
+			if (pref> 0) {// case exact match
+				if (pref == strlen(cur->node->data) && pref == strlen(word)) {// this works becaus ethe serachprefix counts only equal prefixes so if they are same number as well then its the same word
+					cur->node->ended = true;
+					return;
+				}
+				//case word is prefix of a node
+				if (pref == strlen(word) && pref < strlen(cur->node->data)) {
+					Node* oldnode = cur->node;//let oldnode pointer point at the node with the whole word
+					Node* newnode = new Node(word); //node created for our word 
+					newnode->ended = true;
+					/*char temp[50]
+					strcpy(temp, oldnode->data+pref);
+					strcpy(oldnode->data,temp);
+					or */
+					Node* suffix = new Node(oldnode->data + pref);
+					suffix->ended = oldnode->ended;
+					suffix->children = oldnode->children;
+					newnode->children = NULL;
+					addchild(newnode, suffixnode);
+					cur->node = newnode;
+					return;
+
+				}
 				foundPrefix = true;
 				
 				break;
@@ -53,12 +78,12 @@
 		
 			Node* newnode = new Node(word);// created a newnode pointer of type node, then made it point to a node that has the word
 			newnode->ended = true;
-			addchild(myroot,newnode);
+			addchild(current,newnode);
 
 
 			
 
-	}}
+	}
 
 
 
