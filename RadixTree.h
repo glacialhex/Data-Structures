@@ -8,6 +8,8 @@ public:
 	RadixTree();
 	~RadixTree();
 	bool empty();
-	void insert(RadixTree* T, const char& word);
-	void SearchPrefix(const char& word, Node* currectNode);
+	void insert(const char* word);
+int SearchPrefix(const char* word, Node* currectNode);
+void addchild(Node* parent, Node* childnode);
 };
+
