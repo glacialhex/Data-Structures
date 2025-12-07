@@ -143,8 +143,100 @@ void RadixTree::insert(const char* word) {
 		newnode->children = nullptr;
 		addchild(parentNode, newnode);
 	}
+bool RadixTree::deleteRec(Node*& current, const char* word) {
+    if (!current) return false;
 
+    int prefix = SearchPrefix(word, current);
+    int len = strlen(current->data);
+    int wlen = strlen(word);
 
+    // If the current node does NOT match the expected prefix → not found
+    if (prefix == 0) return false;
+
+    // ---------------------------------------------------------
+    // CASE 1: The word ends exactly here
+    // ---------------------------------------------------------
+    if (prefix == wlen && prefix == len) {
+        if (!current->ended) return false;  // word not stored
+
+        current->ended = false;             // unmark the terminal flag
+
+        // If no children → delete the node completely
+        if (current->children == nullptr) {
+            delete current;
+            current = nullptr;
+            return true;
+        }
+
+        // If exactly ONE child → merge it upward
+        if (current->children && current->children->next == nullptr) {
+            Node* childNode = current->children->node;
+
+            // Merge labels
+            strcat(current->data, childNode->data);
+            current->ended = childNode->ended;
+            current->children = childNode->children;
+
+            delete childNode;
+        }
+
+        return true;
+    }
+
+    // ---------------------------------------------------------
+    // CASE 2: The word continues into a child
+    // ---------------------------------------------------------
+    if (prefix == len && prefix < wlen) {
+
+        char nextChar = word[prefix];
+        child* prev = nullptr;
+        child* ch = current->children;
+
+        // Find the matching child in the linked list
+        while (ch && ch->firstChar != nextChar) {
+            prev = ch;
+            ch = ch->next;
+        }
+
+        if (!ch) return false;  // child not found
+
+        bool removed = deleteRec(ch->node, word + prefix);
+
+        if (!removed) return false;
+
+        // Child was deleted
+        if (ch->node == nullptr) {
+            // Remove child link
+            if (prev == nullptr)
+                current->children = ch->next;
+            else
+                prev->next = ch->next;
+
+            delete ch;
+            ch = nullptr;
+        }
+
+        // If current → only 1 child left and not terminal → merge
+        if (!current->ended && current->children && current->children->next == nullptr) {
+            Node* childNode = current->children->node;
+
+            strcat(current->data, childNode->data);
+            current->ended = childNode->ended;
+            current->children = childNode->children;
+
+            delete childNode;
+        }
+
+        return true;
+    }
+
+    return false;  // partial match that doesn't align with delete rules
+}
+bool RadixTree::deleteWord(const char* word) {
+    if (!myRoot) return false;   // tree is empty
+    return deleteRec(myRoot, word);  // call the recursive deletion
+}
+}
 
 
 
@@ -158,4 +250,5 @@ void RadixTree::insert(const char* word) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
 
