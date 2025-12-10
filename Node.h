@@ -9,7 +9,9 @@ struct child {
 struct Node {
 	char data[50]; //dah 3shan a store el kalma elly fe elnode
 	bool ended;
+    int frequency;
 	child* children;
 	Node();
 	Node(const char* label);
 };
+
