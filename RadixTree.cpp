@@ -236,6 +236,101 @@ bool RadixTree::deleteWord(const char* word) {
     if (!myRoot) return false;   // tree is empty
     return deleteRec(myRoot, word);  // call the recursive deletion
 }
+
+// ---------------------------------------------------------
+// Search / Lookup Operations
+// ---------------------------------------------------------
+
+//compares node prefix with key segment, returns length of match
+int RadixTree::matchPrefix(const char* nodePrefix, const char* keySegment) {
+	int i = 0;
+	while (nodePrefix[i] != '\0' && keySegment[i] != '\0' && nodePrefix[i] == keySegment[i])
+		i++;
+	return i;
+}
+
+//traverses an edge and returns the child node if prefix matches fully
+Node* RadixTree::traverseEdge(Node* node, const char* keySegment, int& matchedLen) {
+	child* ch = node->children;
+	while (ch != nullptr) {
+		if (ch->firstChar == keySegment[0]) {
+			matchedLen = matchPrefix(ch->node->data, keySegment);
+			int nodeLen = strlen(ch->node->data);
+
+			if (matchedLen == nodeLen) {// full edge match → can continue traversal
+				return ch->node;
+			}
+			return nullptr;// partial match → key doesn't exist in tree
+		}
+		ch = ch->next;
+	}
+	matchedLen = 0;
+	return nullptr;
+}
+
+//checks if the key is fully matched at this node
+bool RadixTree::isKeyFullyMatched(Node* node, const char* key, int keyLen) {
+	int nodeLen = strlen(node->data);
+	return (keyLen == nodeLen) && node->ended;
+}
+
+//handles search failure (can be extended for logging/debugging)
+void RadixTree::handleSearchFailure(const char* reason) {
+	std::cout << "Search failed: " << reason << std::endl; //added otpion to print or log the failure reason
+}
+
+//main search function → returns true if word exists in tree
+bool RadixTree::search(const char* key) {
+	if (empty()) {
+		handleSearchFailure("Tree is empty");
+		return false;
+	}
+
+	int keyLen = strlen(key);
+	int keyIndex = 0;
+
+	//check root first
+	int rootMatch = matchPrefix(myRoot->data, key);
+	int rootLen = strlen(myRoot->data);
+
+	if (rootMatch < rootLen) {
+		handleSearchFailure("Root prefix mismatch");
+		return false;
+	}
+
+	keyIndex += rootMatch;
+
+	//if key fully matched at root
+	if (keyIndex == keyLen) {
+		if (myRoot->ended) {
+			return true;
+		}
+		handleSearchFailure("Key is prefix of existing word but not marked as ended");
+		return false;
+	}
+
+	//traverse children
+	Node* current = myRoot;
+	while (keyIndex < keyLen) {
+		int matchedLen = 0;
+		Node* nextNode = traverseEdge(current, key + keyIndex, matchedLen);
+
+		if (nextNode == nullptr) {
+			handleSearchFailure("No matching child found");
+			return false;
+		}
+
+		keyIndex += matchedLen;
+		current = nextNode;
+	}
+
+	//check if we've matched the entire key and it's marked as ended
+	if (current->ended) {
+		return true;
+	}
+
+	handleSearchFailure("Key found but not marked as complete word");
+	return false;
 }
 
 
