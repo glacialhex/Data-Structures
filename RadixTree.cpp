@@ -1,9 +1,13 @@
-// RadixTree.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// RadixTree.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 #include <cstring>
+#include <string>
+#include <chrono>
 #include "RadixTree.h"
 
+using namespace std;
 
 RadixTree::RadixTree() {
 	myRoot = nullptr;
@@ -16,11 +20,14 @@ bool RadixTree::empty() {
 	return myRoot == nullptr;
 
 }
-int RadixTree::SearchPrefix(const char* word, Node* currentNode) {
+int RadixTree::matchPrefix(const char* nodePrefix, const char* keySegment) {
 	int i = 0;
-	while (currentNode->data[i] != '\0' && word[i] != '\0' && word[i] == currentNode->data[i])
+	while (nodePrefix[i] != '\0' && keySegment[i] != '\0' && nodePrefix[i] == keySegment[i])
 		i++;
 	return i;
+}
+int RadixTree::SearchPrefix(const char* word, Node* currentNode) {
+	return matchPrefix(word, currentNode->data);
 }
 void RadixTree::addchild(Node* parent, Node* childnode) {
 	child* newchild = new child(childnode->data[0], childnode);//saved first char, and childnode is the node of child itselt
@@ -32,6 +39,8 @@ void RadixTree::insert(const char* word) {
 	if (empty()) {
 		myRoot = new Node(word);
 		myRoot->ended = true;
+		myRoot->frequency = 1;                    // yousef: Initialize frequency
+		myRoot->timestamp = getCurrentTimestamp(); // yousef: Set timestamp
 		return;
 	}
 	//case 3:common  prefix found
@@ -50,18 +59,24 @@ void RadixTree::insert(const char* word) {
 			isPrefix = true;
 			if (prefix == nodeLen && prefix == wordLen) {// this works becaus ethe serachprefix counts only equal prefixes so if they are same number as well then its the same word
 				ch->node->ended = true;
+				ch->node->frequency++;                    // yousef: Increment frequency
+				ch->node->timestamp = getCurrentTimestamp(); // yousef: Update timestamp
 				return;
 			}
 			if (prefix == wordLen && prefix < nodeLen) {
 				Node* oldnode = ch->node;//let oldnode pointer point at the node with the whole word
 				Node* newnode = new Node(word); //node created for our word 
 				newnode->ended = true;
+				newnode->frequency = 1;                    // yousef: Initialize frequency
+				newnode->timestamp = getCurrentTimestamp(); // yousef: Set timestamp
 				/*char temp[50]
 				strcpy(temp, oldnode->data+pref);
 				strcpy(oldnode->data,temp);
 				or */
 				Node* suffix = new Node(oldnode->data + prefix);
 				suffix->ended = oldnode->ended;
+				suffix->frequency = oldnode->frequency;    // yousef: Preserve frequency
+				suffix->timestamp = oldnode->timestamp;    // yousef: Preserve timestamp
 				suffix->children = oldnode->children;
 				newnode->children = nullptr;
 				addchild(newnode, suffix);
@@ -99,6 +114,8 @@ void RadixTree::insert(const char* word) {
 
 				Node* newNode = new Node(word + nodeLen);
 				newNode->ended = true;
+				newNode->frequency = 1;                    // yousef: Initialize frequency
+				newNode->timestamp = getCurrentTimestamp(); // yousef: Set timestamp
 				newNode->children = nullptr;
 
 				addchild(ch->node, newNode);
@@ -108,18 +125,22 @@ void RadixTree::insert(const char* word) {
 				//int prefix = SearchPrefix(word, ch->node->data);
 			if (prefix > 0 && prefix < nodeLen) {
 				Node* newTop = new Node();
-				strncpy_s(newTop->data, ch->node->data, prefix);
+				strncpy(newTop->data, ch->node->data, prefix);
 				newTop->data[prefix] = '\0';
 				newTop->ended = false;
 				Node* node1 = new Node();
 				Node* node2 = new Node();
-				strncpy_s(node1->data, ch->node->data + prefix, nodeLen - prefix);
+				strncpy(node1->data, ch->node->data + prefix, nodeLen - prefix);
 				node1->data[nodeLen - prefix] = '\0';
 				node1->ended = ch->node->ended;
+				node1->frequency = ch->node->frequency;    // yousef: Preserve frequency
+				node1->timestamp = ch->node->timestamp;    // yousef: Preserve timestamp
 				node1->children = ch->node->children;
-				strncpy_s(node2->data, word + prefix, wordLen - prefix);
+				strncpy(node2->data, word + prefix, wordLen - prefix);
 				node2->data[wordLen - prefix] = '\0';
 				node2->ended = true;
+				node2->frequency = 1;                      // yousef: Initialize frequency
+				node2->timestamp = getCurrentTimestamp();  // yousef: Set timestamp
 				node2->children = nullptr;
 				child* child1 = new child(node1->data[0], node1);
 				child* child2 = new child(node2->data[0], node2);
@@ -140,199 +161,399 @@ void RadixTree::insert(const char* word) {
 	//case 2:no common prefix found
 		Node* newnode = new Node(word);// created a newnode pointer of type node, then made it point to a node that has the word
 		newnode->ended = true;
+		newnode->frequency = 1;                    // yousef: Initialize frequency
+		newnode->timestamp = getCurrentTimestamp(); // yousef: Set timestamp
 		newnode->children = nullptr;
 		addchild(parentNode, newnode);
 	}
-bool RadixTree::deleteRec(Node*& current, const char* word) {
-    if (!current) return false;
 
-    int prefix = SearchPrefix(word, current);
-    int len = strlen(current->data);
-    int wlen = strlen(word);
+	bool RadixTree::deleteRec(Node*& current, const char* word) {
+		if (!current) return false;
 
-    // If the current node does NOT match the expected prefix → not found
-    if (prefix == 0) return false;
+		int prefix = SearchPrefix(word, current);
+		int len = strlen(current->data);
+		int wlen = strlen(word);
 
-    // ---------------------------------------------------------
-    // CASE 1: The word ends exactly here
-    // ---------------------------------------------------------
-    if (prefix == wlen && prefix == len) {
-        if (!current->ended) return false;  // word not stored
+		// If the current node does NOT match the expected prefix → not found
+		if (prefix == 0) return false;
 
-        current->ended = false;             // unmark the terminal flag
+		// ---------------------------------------------------------
+		// CASE 1: The word ends exactly here
+		// ---------------------------------------------------------
+		if (prefix == wlen && prefix == len) {
+			if (!current->ended) return false;  // word not stored
 
-        // If no children → delete the node completely
-        if (current->children == nullptr) {
-            delete current;
-            current = nullptr;
-            return true;
-        }
+			current->ended = false;             // unmark the terminal flag
 
-        // If exactly ONE child → merge it upward
-        if (current->children && current->children->next == nullptr) {
-            Node* childNode = current->children->node;
-
-            // Merge labels
-            strcat(current->data, childNode->data);
-            current->ended = childNode->ended;
-            current->children = childNode->children;
-
-            delete childNode;
-        }
-
-        return true;
-    }
-
-    // ---------------------------------------------------------
-    // CASE 2: The word continues into a child
-    // ---------------------------------------------------------
-    if (prefix == len && prefix < wlen) {
-
-        char nextChar = word[prefix];
-        child* prev = nullptr;
-        child* ch = current->children;
-
-        // Find the matching child in the linked list
-        while (ch && ch->firstChar != nextChar) {
-            prev = ch;
-            ch = ch->next;
-        }
-
-        if (!ch) return false;  // child not found
-
-        bool removed = deleteRec(ch->node, word + prefix);
-
-        if (!removed) return false;
-
-        // Child was deleted
-        if (ch->node == nullptr) {
-            // Remove child link
-            if (prev == nullptr)
-                current->children = ch->next;
-            else
-                prev->next = ch->next;
-
-            delete ch;
-            ch = nullptr;
-        }
-
-        // If current → only 1 child left and not terminal → merge
-        if (!current->ended && current->children && current->children->next == nullptr) {
-            Node* childNode = current->children->node;
-
-            strcat(current->data, childNode->data);
-            current->ended = childNode->ended;
-            current->children = childNode->children;
-
-            delete childNode;
-        }
-
-        return true;
-    }
-
-    return false;  // partial match that doesn't align with delete rules
-}
-bool RadixTree::deleteWord(const char* word) {
-    if (!myRoot) return false;   // tree is empty
-    return deleteRec(myRoot, word);  // call the recursive deletion
-}
-
-// ---------------------------------------------------------
-// Search / Lookup Operations
-// ---------------------------------------------------------
-
-//compares node prefix with key segment, returns length of match
-int RadixTree::matchPrefix(const char* nodePrefix, const char* keySegment) {
-	int i = 0;
-	while (nodePrefix[i] != '\0' && keySegment[i] != '\0' && nodePrefix[i] == keySegment[i])
-		i++;
-	return i;
-}
-
-//traverses an edge and returns the child node if prefix matches fully
-Node* RadixTree::traverseEdge(Node* node, const char* keySegment, int& matchedLen) {
-	child* ch = node->children;
-	while (ch != nullptr) {
-		if (ch->firstChar == keySegment[0]) {
-			matchedLen = matchPrefix(ch->node->data, keySegment);
-			int nodeLen = strlen(ch->node->data);
-
-			if (matchedLen == nodeLen) {// full edge match → can continue traversal
-				return ch->node;
+			// If no children → delete the node completely
+			if (current->children == nullptr) {
+				delete current;
+				current = nullptr;
+				return true;
 			}
-			return nullptr;// partial match → key doesn't exist in tree
-		}
-		ch = ch->next;
-	}
-	matchedLen = 0;
-	return nullptr;
-}
 
-//checks if the key is fully matched at this node
-bool RadixTree::isKeyFullyMatched(Node* node, const char* key, int keyLen) {
-	int nodeLen = strlen(node->data);
-	return (keyLen == nodeLen) && node->ended;
-}
+			// If exactly ONE child → merge it upward
+			if (current->children && current->children->next == nullptr) {
+				Node* childNode = current->children->node;
 
-//handles search failure (can be extended for logging/debugging)
-void RadixTree::handleSearchFailure(const char* reason) {
-	std::cout << "Search failed: " << reason << std::endl; //added otpion to print or log the failure reason
-}
+				// Merge labels
+				strcat(current->data, childNode->data);
+				current->ended = childNode->ended;
+				current->children = childNode->children;
 
-//main search function → returns true if word exists in tree
-bool RadixTree::search(const char* key) {
-	if (empty()) {
-		handleSearchFailure("Tree is empty");
-		return false;
-	}
+				delete childNode;
+			}
 
-	int keyLen = strlen(key);
-	int keyIndex = 0;
-
-	//check root first
-	int rootMatch = matchPrefix(myRoot->data, key);
-	int rootLen = strlen(myRoot->data);
-
-	if (rootMatch < rootLen) {
-		handleSearchFailure("Root prefix mismatch");
-		return false;
-	}
-
-	keyIndex += rootMatch;
-
-	//if key fully matched at root
-	if (keyIndex == keyLen) {
-		if (myRoot->ended) {
 			return true;
 		}
-		handleSearchFailure("Key is prefix of existing word but not marked as ended");
-		return false;
+
+		// ---------------------------------------------------------
+		// CASE 2: The word continues into a child
+		// ---------------------------------------------------------
+		if (prefix == len && prefix < wlen) {
+
+			char nextChar = word[prefix];
+			child* prev = nullptr;
+			child* ch = current->children;
+
+			// Find the matching child in the linked list
+			while (ch && ch->firstChar != nextChar) {
+				prev = ch;
+				ch = ch->next;
+			}
+
+			if (!ch) return false;  // child not found
+
+			bool removed = deleteRec(ch->node, word + prefix);
+
+			if (!removed) return false;
+
+			// Child was deleted
+			if (ch->node == nullptr) {
+				// Remove child link
+				if (prev == nullptr)
+					current->children = ch->next;
+				else
+					prev->next = ch->next;
+
+				delete ch;
+				ch = nullptr;
+			}
+
+			// If current → only 1 child left and not terminal → merge
+			if (!current->ended && current->children && current->children->next == nullptr) {
+				Node* childNode = current->children->node;
+
+				strcat(current->data, childNode->data);
+				current->ended = childNode->ended;
+				current->children = childNode->children;
+
+				delete childNode;
+			}
+
+			return true;
+		}
+
+		return false;  // partial match that doesn't align with delete rules
+	}
+	bool RadixTree::deleteWord(const char* word) {
+		if (!myRoot) return false;   // tree is empty
+		return deleteRec(myRoot, word);  // call the recursive deletion
 	}
 
-	//traverse children
+	// ---------------------------------------------------------
+	// Search / Lookup Operations
+	// ---------------------------------------------------------
+
+	//compares node prefix with key segment, returns length of match
+
+	//traverses an edge and returns the child node if prefix matches fully
+	Node* RadixTree::traverseEdge(Node* node, const char* keySegment, int& matchedLen) {
+		child* ch = node->children;
+		while (ch != nullptr) {
+			if (ch->firstChar == keySegment[0]) {
+				matchedLen = matchPrefix(ch->node->data, keySegment);
+				int nodeLen = strlen(ch->node->data);
+
+				if (matchedLen == nodeLen) {// full edge match → can continue traversal
+					return ch->node;
+				}
+				return nullptr;// partial match → key doesn't exist in tree
+			}
+			ch = ch->next;
+		}
+		matchedLen = 0;
+		return nullptr;
+	}
+
+	//checks if the key is fully matched at this node
+	bool RadixTree::isKeyFullyMatched(Node* node, const char* key, int keyLen) {
+		int nodeLen = strlen(node->data);
+		return (keyLen == nodeLen) && node->ended;
+	}
+
+	//handles search failure (can be extended for logging/debugging)
+	void RadixTree::handleSearchFailure(const char* reason) {
+		std::cout << "Search failed: " << reason << std::endl; //added otpion to print or log the failure reason
+	}
+
+	//main search function → returns true if word exists in tree
+	bool RadixTree::search(const char* key) {
+		if (empty()) {
+			handleSearchFailure("Tree is empty");
+			return false;
+		}
+
+		int keyLen = strlen(key);
+		int keyIndex = 0;
+
+		//check root first
+		int rootMatch = matchPrefix(myRoot->data, key);
+		int rootLen = strlen(myRoot->data);
+
+		if (rootMatch < rootLen) {
+			handleSearchFailure("Root prefix mismatch");
+			return false;
+		}
+
+		keyIndex += rootMatch;
+
+		//if key fully matched at root
+		if (keyIndex == keyLen) {
+			if (myRoot->ended) {
+				return true;
+			}
+			handleSearchFailure("Key is prefix of existing word but not marked as ended");
+			return false;
+		}
+
+		//traverse children starting from root
+		Node* current = myRoot;
+		while (keyIndex < keyLen) {
+			int matchedLen = 0;
+			Node* nextNode = traverseEdge(current, key + keyIndex, matchedLen);
+
+			if (nextNode == nullptr) {
+				handleSearchFailure("No matching child found");
+				return false;
+			}
+
+			keyIndex += matchedLen;
+			current = nextNode;
+		}
+
+		//check if we've matched the entire key and it's marked as ended
+		if (current->ended) {
+			return true;
+		}
+
+		handleSearchFailure("Key found but not marked as complete word");
+		return false;
+	}
+	void RadixTree :: collectWords(Node* node, string currentWord) {
+		if (!node) return;
+		currentWord += node->data;
+		if (node->ended) {
+			cout << currentWord <<endl;
+		}
+		child* ch = node->children;
+		while (ch) {
+			collectWords(ch->node, currentWord);
+			ch = ch->next;
+		}
+	}
+	void RadixTree::autoSuggest(const char* prefix, Node* current) {
+		current = myRoot;
+		if (empty()) {
+			cout << "Tree is empty. No suggestions available." << std::endl;
+			return;
+		}
+		int indexrn = 0;
+		int prefixLength = strlen(prefix);
+		while (indexrn < prefixLength) {
+			int matchedLen = 0;
+			Node* nextNode = traverseEdge(current, prefix + indexrn, matchedLen);
+			if (nextNode == nullptr) {
+				cout << "No suggestions found for the given prefix." << std::endl;
+				return;
+			}
+			indexrn += matchedLen;
+			current = nextNode;
+		}
+		string currentWord = "";
+		for (int i = 0; i < indexrn; i++) {
+			currentWord += prefix[i];
+		}
+		collectWords(current, currentWord);
+	}
+
+// =============================================================
+// yousef: Helper Functions for Tree Enhancements + Cleanup
+// =============================================================
+
+// Get current timestamp for recency tracking
+long long RadixTree::getCurrentTimestamp() {
+	return std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::system_clock::now().time_since_epoch()
+	).count();
+}
+
+// Merge single-child non-word nodes to compress the tree
+// This merges a child into its parent if the child has only one child and is not a word endpoint
+void RadixTree::mergeNodes(Node* parent, char edgeChar) {
+	if (!parent) return;
+
+	// Find the child with the given edge character
+	child* ch = parent->children;
+	while (ch != nullptr && ch->firstChar != edgeChar) {
+		ch = ch->next;
+	}
+
+	if (!ch || !ch->node) return;
+
+	Node* childNode = ch->node;
+
+	// Only merge if child has exactly one child and is not a word endpoint
+	if (childNode->getChildCount() == 1 && !childNode->ended) {
+		child* grandchild = childNode->children;
+
+		if (grandchild && grandchild->node) {
+			// Combine labels: child's label + grandchild's label
+			char combinedLabel[100];
+			strcpy(combinedLabel, childNode->data);
+			strcat(combinedLabel, grandchild->node->data);
+
+			// Update grandchild's label to combined
+			strcpy(grandchild->node->data, combinedLabel);
+
+			// Move grandchild up to replace child
+			ch->node = grandchild->node;
+			ch->firstChar = combinedLabel[0];
+
+			// Clean up old child node
+			delete childNode;
+		}
+	}
+}
+
+// Update frequency and timestamp when a word is accessed/chosen
+void RadixTree::updateWordFrequency(Node* node) {
+	if (node && node->ended) {
+		node->frequency++;
+		node->timestamp = getCurrentTimestamp();
+	}
+}
+
+// Increment frequency for an existing word in the tree
+// Useful when user selects a suggestion (for ranking)
+void RadixTree::incrementFrequency(const char* word) {
+	if (empty() || !word) return;
+
+	int keyLen = strlen(word);
+	int keyIndex = 0;
+
+	// Check root first
+	int rootLen = strlen(myRoot->data);
+
+	if (rootLen > 0) {
+		int rootMatch = matchPrefix(myRoot->data, word);
+		if (rootMatch < rootLen) return; // Word not found
+
+		keyIndex += rootMatch;
+
+		if (keyIndex == keyLen) {
+			// Word matches at root
+			updateWordFrequency(myRoot);
+			return;
+		}
+	}
+
+	// Traverse to find the word
 	Node* current = myRoot;
 	while (keyIndex < keyLen) {
 		int matchedLen = 0;
-		Node* nextNode = traverseEdge(current, key + keyIndex, matchedLen);
+		Node* nextNode = traverseEdge(current, word + keyIndex, matchedLen);
 
-		if (nextNode == nullptr) {
-			handleSearchFailure("No matching child found");
-			return false;
-		}
+		if (nextNode == nullptr) return; // Word not found
 
 		keyIndex += matchedLen;
 		current = nextNode;
 	}
 
-	//check if we've matched the entire key and it's marked as ended
-	if (current->ended) {
-		return true;
-	}
-
-	handleSearchFailure("Key found but not marked as complete word");
-	return false;
+	// Update frequency if we found the complete word
+	updateWordFrequency(current);
 }
 
+// =============================================================
+// malak: Prefix Search Engine (Core Prefix Navigation)
+// =============================================================
+
+// Find the node corresponding to a given prefix
+// Returns pointer to the node where prefix ends, or nullptr if prefix not found
+Node* RadixTree::findNodeForPrefix(const char* prefix) {
+	if (empty() || prefix == nullptr)
+		return nullptr;
+
+	Node* current = myRoot;
+	int index = 0;  // how much of prefix we matched
+	int prefixLen = strlen(prefix);  // length of prefix we're looking for
+
+	// See how many characters match between root's data and prefix we're searching for
+	int rootmatch = matchPrefix(current->data, prefix);
+
+	// 1st case: root mismatch
+	if (rootmatch == 0)
+		return nullptr;  // prefix does not exist
+
+	// Prefix ends inside or exactly at root
+	if (rootmatch >= prefixLen)
+		return current;  // e.g., prefix is "ca", root is "cat" so cat will be returned
+
+	// Prefix continues beyond root label
+	if (rootmatch < strlen(current->data))  // length of stored data bigger than the matched prefixes
+		return nullptr;
+
+	index = rootmatch;  // to track how much is already matched of the prefix
+
+	// We go down the tree
+	while (index < prefixLen) {
+		child* ch = current->children;
+		bool found = false;
+
+		// Searching among children
+		while (ch != nullptr) {
+			if (ch->firstChar == prefix[index]) {  // compare first character to see if we should continue with this child
+				int matched = matchPrefix(ch->node->data, prefix + index);  // prefix+index points to char starting from after matched point
+
+				// No match at all
+				if (matched == 0)
+					return nullptr;
+
+				// Prefix ends inside this node
+				if (index + matched >= prefixLen)
+					return ch->node;
+
+				// Partial mismatch before prefix ends
+				if (matched < strlen(ch->node->data))
+					return nullptr;
+
+				// Full match, continue traversal
+				index += matched;  // child node fully matches a part of the prefix, so continue traversal down this child
+				current = ch->node;
+				found = true;
+				break;
+			}
+			ch = ch->next;  // If first child didn't match, check next sibling
+		}
+
+		// No matching child found
+		if (!found)
+			return nullptr;
+	}
+
+	// Prefix fully matched at node boundary
+	return current;
+}
 
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
@@ -345,5 +566,3 @@ bool RadixTree::search(const char* key) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
-
-
