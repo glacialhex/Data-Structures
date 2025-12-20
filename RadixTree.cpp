@@ -555,6 +555,59 @@ Node* RadixTree::findNodeForPrefix(const char* prefix) {
 	return current;
 }
 
+#include <vector> 
+
+// This is the recursive function that hunts for words
+void RadixTree::collectAllWords(Node* node, string currentString, vector<string>& results) {
+    // 1-If the node is empty stop
+    if (node == nullptr) {
+        return;
+    }
+
+    // 2-Check if the current path forms a valid word
+    // If 'ended' is true, it means a word stops here. Add it to our list.
+    if (node->ended) {
+        results.push_back(currentString);
+    }
+
+    // 3-Explore the children (The "DFS" part)
+    // Your children are stored in a Linked List, so we use a while loop.
+    child* track = node->children;
+
+    while (track != nullptr) {
+        // RADIX LOGIC:
+        // Unlike a normal Trie, we don't just add one letter.
+        // We add the WHOLE string stored in the child node (track->node->data).
+        string nextString = currentString + string(track->node->data);
+
+        // Recursive call: Go deeper into this child
+        collectAllWords(track->node, nextString, results);
+
+        // Move to the next sibling in the linked list
+        track = track->next;
+    }
+}
+
+// This is the function the Main or GUI will actually call
+vector<string> RadixTree::getAutocompletions(const char* prefix) {
+    vector<string> results;
+
+    Node* startNode = findNodeForPrefix(prefix);
+
+    // If the prefix doesn't exist in the tree, return an empty list
+    if (startNode == nullptr) {
+        return results;
+    }
+
+    // Collect all words starting from that node
+    // We pass the 'prefix' as the starting string
+    collectAllWords(startNode, string(prefix), results);
+
+    return results;
+}
+
+
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
@@ -566,3 +619,4 @@ Node* RadixTree::findNodeForPrefix(const char* prefix) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
