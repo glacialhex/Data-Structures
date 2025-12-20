@@ -167,6 +167,38 @@ int main() {
 	testDelete("testing", false, false);  //alredy deleted
 
 
+	
+	std::cout << "\nTest 6: Testing Member 2 Autocomplete\n";
+    std::cout << "=======================================\n";
+
+    // Insert some related words to test autocomplete specifically
+    tree.insert("car");
+    tree.insert("cart");
+    tree.insert("carpet");
+    tree.insert("cartoon");
+    tree.insert("camera");
+
+    std::cout << "Type 'car' -> Expecting: car, cart, carpet, cartoon\n";
+    
+    // Note: We need to use 'auto' or 'std::vector<std::string>' here
+    std::vector<std::string> suggestions = tree.getAutocompletions("car");
+
+    if (suggestions.empty()) {
+        std::cout << "No suggestions found (Something is wrong).\n";
+    } else {
+        std::cout << "Found " << suggestions.size() << " suggestions:\n";
+        for (const std::string& s : suggestions) {
+            std::cout << " - " << s << "\n";
+        }
+    }
+
+    std::cout << "\nType 'cam' -> Expecting: camera\n";
+    suggestions = tree.getAutocompletions("cam");
+    for (const std::string& s : suggestions) std::cout << " - " << s << "\n";
+
+
+
+	
 	// Test Sumary
 	std::cout << "\n=========================================\n";
 	std::cout << "TEST SUMMARY\n";
@@ -184,5 +216,6 @@ int main() {
 
 	return failed; //retrun number of failures (0 = sucess)
 }
+
 
 
