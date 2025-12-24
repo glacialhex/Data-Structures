@@ -167,8 +167,8 @@ int main() {
 	testDelete("testing", false, false);  //alredy deleted
 
 
-	
-	std::cout << "\nTest 6: Testing Member 2 Autocomplete\n";
+	//-----------------------J
+	std::cout << "\nTest 6: Testing Autocomplete(Direct Printing)\n";
     std::cout << "=======================================\n";
 
     // Insert some related words to test autocomplete specifically
@@ -176,27 +176,20 @@ int main() {
     tree.insert("cart");
     tree.insert("carpet");
     tree.insert("cartoon");
-    tree.insert("camera");
+    //tree.insert("camera");
 
-    std::cout << "Type 'car' -> Expecting: car, cart, carpet, cartoon\n";
+   std::cout << "Type 'car' -> Expecting list of words starting with 'car':\n";
+    // This will print the list directly to the console
+    tree.getAutocompletions("car");
+
+    std::cout << "\nType 'cam' -> Expecting 'camera' (if inserted previously):\n";
+    tree.insert("camera"); // ensuring it's there
+    tree.getAutocompletions("cam");
     
-    // Note: We need to use 'auto' or 'std::vector<std::string>' here
-    std::vector<std::string> suggestions = tree.getAutocompletions("car");
+    std::cout << "\nType 'z' -> Expecting 'No suggestions found':\n";
+    tree.getAutocompletions("z");
 
-    if (suggestions.empty()) {
-        std::cout << "No suggestions found (Something is wrong).\n";
-    } else {
-        std::cout << "Found " << suggestions.size() << " suggestions:\n";
-        for (const std::string& s : suggestions) {
-            std::cout << " - " << s << "\n";
-        }
-    }
-
-    std::cout << "\nType 'cam' -> Expecting: camera\n";
-    suggestions = tree.getAutocompletions("cam");
-    for (const std::string& s : suggestions) std::cout << " - " << s << "\n";
-
-
+    // ==========================================================
 
 	
 	// Test Sumary
@@ -216,6 +209,7 @@ int main() {
 
 	return failed; //retrun number of failures (0 = sucess)
 }
+
 
 
 
