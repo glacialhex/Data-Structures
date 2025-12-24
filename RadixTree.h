@@ -1,7 +1,6 @@
 #pragma once
 #include "Node.h"
 #include <string>
-#include <vector>
 class RadixTree
 {
 public:
@@ -15,9 +14,8 @@ int SearchPrefix(const char* word, Node* currectNode);
 void addchild(Node* parent, Node* childnode);
 bool deleteWord(const char* word) ;
 bool deleteRec(Node*& current, const char* word);
-std::vector<std::string> getAutocompletions(const char* prefix);
-void collectAllWords(Node* node, std::string currentString, std::vector<std::string>& results);
-
+void getAutocompletions(const char* prefix);
+void collectAllWords(Node* node, std::string currentString);
 	// Search / Lookup Operation
 
 	bool search(const char* key);
@@ -36,6 +34,7 @@ void collectAllWords(Node* node, std::string currentString, std::vector<std::str
 	// malak: Prefix Search Engine (Core Prefix Navigation)
 	Node* findNodeForPrefix(const char* prefix);        // Find node where prefix ends (returns nullptr if not found)
 };
+
 
 
 
