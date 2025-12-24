@@ -350,6 +350,7 @@ void RadixTree::insert(const char* word) {
 		handleSearchFailure("Key found but not marked as complete word");
 		return false;
 	}
+//NOUR
 	void RadixTree :: collectWords(Node* node, string currentWord) {
 		if (!node) return;
 		currentWord += node->data;
@@ -362,19 +363,26 @@ void RadixTree::insert(const char* word) {
 			ch = ch->next;
 		}
 	}
-	void RadixTree::autoSuggest(const char* prefix, Node* current) {
-		current = myRoot;
+	void RadixTree::autoSuggest(const char* prefix) {
 		if (empty()) {
 			cout << "Tree is empty. No suggestions available." << std::endl;
 			return;
 		}
+		Node* current = myRoot;
 		int indexrn = 0;
 		int prefixLength = strlen(prefix);
+		int rootMatch = matchPrefix(current->data, prefix);
+        int rootLen = strlen(current->data);
+		if (rootMatch < rootLen && rootMatch < prefixLength) {
+        cout << "No suggestions found for the given prefix." << endl;
+        return;
+    }
+    indexrn += rootMatch;
 		while (indexrn < prefixLength) {
 			int matchedLen = 0;
 			Node* nextNode = traverseEdge(current, prefix + indexrn, matchedLen);
 			if (nextNode == nullptr) {
-				cout << "No suggestions found for the given prefix." << std::endl;
+				cout << "No suggestions found for the given prefix." <<endl;
 				return;
 			}
 			indexrn += matchedLen;
@@ -619,4 +627,5 @@ vector<string> RadixTree::getAutocompletions(const char* prefix) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
 
