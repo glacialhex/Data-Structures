@@ -25,11 +25,11 @@ void handleSearchFailure(const char* reason);
 
 
 Node* findNodeForPrefix(const char* prefix);
-void autoSuggest(const char* prefix, Node* current);
-void collectWords(Node* node, string currentWord) {
+
 
 
 };
+
 
 
 
