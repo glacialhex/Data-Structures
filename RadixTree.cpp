@@ -563,55 +563,78 @@ Node* RadixTree::findNodeForPrefix(const char* prefix) {
 	return current;
 }
 
-#include <vector> 
+//--------------------J
+void RadixTree::collectAllWords(Node* node, string currentString) {
+    if (node == nullptr) return;
 
-// This is the recursive function that hunts for words
-void RadixTree::collectAllWords(Node* node, string currentString, vector<string>& results) {
-    // 1-If the node is empty stop
-    if (node == nullptr) {
-        return;
-    }
-
-    // 2-Check if the current path forms a valid word
-    // If 'ended' is true, it means a word stops here. Add it to our list.
+    // If this node marks the end of a word,print
     if (node->ended) {
-        results.push_back(currentString);
+        cout << "- " << currentString << endl;
     }
 
-    // 3-Explore the children (The "DFS" part)
-    // Your children are stored in a Linked List, so we use a while loop.
+    // Go through all children
     child* track = node->children;
-
     while (track != nullptr) {
-        // RADIX LOGIC:
-        // Unlike a normal Trie, we don't just add one letter.
-        // We add the WHOLE string stored in the child node (track->node->data).
+        // Buildibg the next string
         string nextString = currentString + string(track->node->data);
-
-        // Recursive call: Go deeper into this child
-        collectAllWords(track->node, nextString, results);
-
-        // Move to the next sibling in the linked list
+        
+        // Recurse
+        collectAllWords(track->node, nextString);
+        
+        // Next sibling
         track = track->next;
     }
 }
 
-// This is the function the Main or GUI will actually call
-vector<string> RadixTree::getAutocompletions(const char* prefix) {
-    vector<string> results;
-
-    Node* startNode = findNodeForPrefix(prefix);
-
-    // If the prefix doesn't exist in the tree, return an empty list
-    if (startNode == nullptr) {
-        return results;
+// manager Ffinds the starting point
+void RadixTree::getAutocompletions(const char* prefix) {
+    if (myRoot == nullptr) {
+        cout << "Tree is empty." << endl;
+        return;
     }
 
-    // Collect all words starting from that node
-    // We pass the 'prefix' as the starting string
-    collectAllWords(startNode, string(prefix), results);
+    // We need to find where the prefix ends. 
+    Node* current = myRoot;
+    string builtString = ""; 
 
-    return results;
+    int keyLen = strlen(prefix);
+    int keyIndex = 0;
+
+    // 1. Check Root first
+    int rootMatch = matchPrefix(myRoot->data, prefix);
+    
+    // If root doesn't even match the start of the prefix
+    if (rootMatch == 0 && keyLen > 0) {
+        cout << "No suggestions found." << endl;
+        return;
+    }
+
+    // Capture the root's data into our string builder
+    builtString += myRoot->data;
+    keyIndex += rootMatch;
+
+    // 2. Traverse down until whle prefix is covered
+    while (keyIndex < keyLen) {
+        int matchedLen = 0;
+        // Use your existing helper to find the right child
+        Node* nextNode = traverseEdge(current, prefix + keyIndex, matchedLen);
+
+        if (nextNode == nullptr) {
+            cout << "No suggestions found." << endl;
+            return;
+        }
+
+        // child found, add its label to the running string.
+        builtString += nextNode->data;
+        
+        // Move down
+        current = nextNode;
+        keyIndex += matchedLen;
+    }
+
+    // 3. We are now at the node that covers the prefix.
+    // Start collecting and printing all words below this point.
+    collectAllWords(current, builtString);
 }
 
 
@@ -627,5 +650,6 @@ vector<string> RadixTree::getAutocompletions(const char* prefix) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
 
 
