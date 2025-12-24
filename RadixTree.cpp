@@ -341,43 +341,6 @@ bool RadixTree::search(const char* key) {
 	handleSearchFailure("Key found but not marked as complete word");
 	return false;
 }
-void RadixTree::collectWords(Node* node, string currentWord) {
-	if (!node) return;
-	currentWord += node->data;
-	if (node->ended) {
-		cout << currentWord << endl;
-	}
-	child* ch = node->children;
-	while (ch) {
-		collectWords(ch->node, currentWord);
-		ch = ch->next;
-	}
-}
-void RadixTree::autoSuggest(const char* prefix, Node* current) {
-	current = myRoot;
-	if (empty()) {
-		cout << "Tree is empty. No suggestions available." << std::endl;
-		return;
-	}
-	int indexrn = 0;
-	int prefixLength = strlen(prefix);
-	while (index < prefixLength) {
-		int matchedLen = 0;
-		Node* nextNode = traverseEdge(current, prefix + indexrn, matchedLen);
-		if (nextNode == nullptr) {
-			cout << "No suggestions found for the given prefix." << std::endl;
-			return;
-		}
-		indexrn += matchedLen;
-		current = nextNode;
-	}
-	string currentWord = "";
-	for (int i = 0; i < index; i++) {
-		currentWord += prefix[i];
-	}
-	collectWords(current, currentWord);
-}
-
 
 
 
@@ -451,6 +414,7 @@ Node* RadixTree::findNodeForPrefix(const char* prefix) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
 
 
 
