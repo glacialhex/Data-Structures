@@ -344,64 +344,6 @@ bool RadixTree::search(const char* key) {
 
 
 
-Node* RadixTree::findNodeForPrefix(const char* prefix) {
-	if (empty() || prefix == nullptr)
-		return nullptr;
-
-	Node* current = myRoot;
-	int index = 0;//how much of prefix we matched
-	int prefixLen = strlen(prefix);//length of prefix we're looking for
-
-	int rootmatch = matchPrefix(current->data, prefix);//see how many characters match betweb roots data and prefix we're searching for
-	//1st case root mismatch
-	if (rootmatch == 0)
-		return nullptr;//prefix does not exist
-	// prefix ends inside or exactly at root
-	if (rootmatch >= prefixLen)
-		return current;// for example prefix is ca, root is cat so cat will be returned
-	// prefix continues beyond root label
-	if (rootmatch < strlen(current->data))//length of stored data bigger than the matched prefixes
-		return nullptr;
-
-	index = rootmatch; //to track how much is already matched of the prefix
-	//we go down the tree 
-	while (index < prefixLen) {
-		child* ch = current->children;
-		bool found = false;
-		//searching among children
-		while (ch != nullptr) {
-			if (ch->firstChar == prefix[index]) {//compare first character to see if weshould continue with this child
-
-				int matched = matchPrefix(ch->node->data, prefix + index);//prefix+index points to char starting from after matched point
-
-				// No match at all
-				if (matched == 0)
-					return nullptr;
-				// Prefix ends inside this node
-				if (index + matched >= prefixLen)
-					return ch->node;
-
-				// Partial mismatch before prefix ends
-				if (matched < strlen(ch->node->data))
-					return nullptr;
-
-				// Full match, continue traversal
-				index += matched;//child node fully matches a part of the prefix, so continue traversal down this child.
-				current = ch->node;
-				found = true;
-				break;
-			}
-			ch = ch->next;//If first child didn’t match, check next sibling.
-		}
-		// No matching child found
-		if (!found)
-			return nullptr;
-	}
-
-	// Prefix fully matched at node boundary
-	return current;
-}
-
 
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
@@ -414,6 +356,7 @@ Node* RadixTree::findNodeForPrefix(const char* prefix) {
 //   4. Use the Error List window to view errors
 //   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
 //   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
 
 
 
