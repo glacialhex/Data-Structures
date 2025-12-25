@@ -1,0 +1,93 @@
+//NOUR
+#include <QApplication>
+#include <QMainWindow>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QPalette>
+#include <QDebug>
+#include <functional>
+#include <QObject>
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+     QMainWindow mainWindow;
+    mainWindow.setWindowTitle("Search Bar Experience");
+    mainWindow.resize(1000,600);
+    QWidget *centralWidget = new QWidget(&mainWindow);
+    mainWindow.setCentralWidget(centralWidget);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    centralWidget->setLayout(mainLayout);
+    QLabel *titlelabel = new QLabel("Search Bar EExperience");
+    titlelabel->setAlignment(Qt::AlignCenter);
+    titlelabel->setStyleSheet("color: darkblue; font-size: 20px; font-weight: 600;font-style: italic;" );
+    mainLayout->addWidget(titlelabel);
+    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+    mainLayout->addLayout(horizontalLayout);
+    QLineEdit *searchBox = new QLineEdit;
+    searchBox->setPlaceholderText("Type to search...");
+    QLabel *hiddenLabel = new QLabel(centralWidget);
+    hiddenLabel->setStyleSheet("color: gray;");
+    hiddenLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    hiddenLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+    hiddenLabel->hide();
+    //hiddenLabel->setGeometry(searchBox->geometry());
+   // QObject::connect(searchBox, &QLineEdit::textChanged, [=](const QString &text){
+        //
+    //qDebug() << "User typed:" << text;
+//});
+    horizontalLayout->addWidget(searchBox);
+    QListWidget *suggestionsList = new QListWidget;
+    horizontalLayout->addWidget(suggestionsList);
+    suggestionsList->addItem("cat");
+    suggestionsList->addItem("car");
+    suggestionsList->addItem("cart");
+    suggestionsList->addItem("camera");
+    //deh mo2kata le 8ayat ama narbot bel back end
+    QObject::connect(suggestionsList, &QListWidget::itemClicked,
+            [=](QListWidgetItem *item) {
+                searchBox->setText(item->text());
+            });
+    QObject::connect(suggestionsList, &QListWidget::itemDoubleClicked,
+            [=](QListWidgetItem *item) {
+                searchBox->setText(item->text());
+                qDebug() << "Confirmed:" << item->text();
+            });
+    QObject::connect(searchBox, &QLineEdit::textChanged,
+            [=](const QString &text) {
+
+        hiddenLabel->hide();
+
+        if (text.isEmpty()) return;
+        if (suggestionsList->count() == 0) return;
+
+        QString suggestion = suggestionsList->item(0)->text();
+
+        // Check if suggestion starts with what user typed
+        if (suggestion.startsWith(text)) {
+
+            QString remainder = suggestion.mid(text.length());
+
+            if (!remainder.isEmpty()) {
+               hiddenLabel->setText(text + remainder);
+                hiddenLabel->show();
+            }
+        }
+    });
+    horizontalLayout->setStretch(0,2);
+    horizontalLayout->setStretch(1,1);
+    searchBox->setStyleSheet("background-color: #f1f1f0; color: blue;");
+    suggestionsList->setStyleSheet("background-color: #ffffff; color: red;");
+
+    QPalette pal = mainWindow.palette();
+    pal.setColor(QPalette::Window, Qt::lightGray); // background color
+    mainWindow.setPalette(pal);
+    mainWindow.setAutoFillBackground(true);
+
+    mainWindow.show();
+    hiddenLabel->setGeometry(searchBox->geometry());
+    hiddenLabel->raise();
+    return app.exec();
+}
