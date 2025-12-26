@@ -21,13 +21,13 @@ public:
     bool isKeyFullyMatched(Node* node, const char* key, int keyLen);
     void handleSearchFailure(const char* reason);
 
-    // deletion  //lujain - jana
+    // deletion  //lujain 
     bool deleteWord(const char* word);
     bool deleteRec(Node*& current, const char* word);
 
-    // autocomplete 
+    // autoSuggest
     void collectWords(Node* node, const char* prefix);
-    void getAutocompletions(const char* prefix);  //jana
+    void getAutoSuggestions(const char* prefix);  //Nour
 
     // extras  //yousef
     long long getCurrentTimestamp();  
@@ -37,6 +37,7 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
 
 
