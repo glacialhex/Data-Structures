@@ -299,7 +299,7 @@ void RadixTree::collectWords(Node* node, const char* prefix) {
     }
 }
 
-void RadixTree::getAutocompletions(const char* prefix) {
+void RadixTree::getAutoSuggestions(const char* prefix) {
     if (empty()) {
         cout << "Tree empty.\n";
         return;
@@ -356,4 +356,5 @@ void RadixTree::incrementFrequency(const char* word) {
     if (!myRoot) return;
     search(word); // search updates frequency
 }
+
 
