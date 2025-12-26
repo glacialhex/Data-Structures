@@ -27,7 +27,7 @@ public:
 
     // autocomplete 
     void collectWords(Node* node, const char* prefix);
-    void getAutocompletions(const char* prefix); 
+    void getAutocompletions(const char* prefix);  //jana
 
     // extras  //yousef
     long long getCurrentTimestamp();  
@@ -37,6 +37,7 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
 
 
