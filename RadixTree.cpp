@@ -1,4 +1,27 @@
-﻿// RadixTree.cpp : Radix Tree Implementation
+﻿/******************************************************************************
+ *
+ *        ___   _____ _   _  _____ _   _  _____
+ *       / _ \ / ____| | | ||  ___| \ | |/ ____|
+ *      | |_| | (___ | | | || |__ |  \| | |  __
+ *      |  _  |\___ \| | | ||  __|| . ` | | |_ |
+ *      | | | |____) | |_| || |___| |\  | |__| |
+ *      |_| |_|_____/ \___/ |_____|_| \_|\_____|
+ *
+ *                    Faculty of Engineering
+ *                    Ain Shams University
+ *
+ ******************************************************************************
+ *
+ *  Copyright (c) 2024 Faculty of Engineering, Ain Shams University
+ *  All Rights Reserved.
+ *
+ *  Project: Radix Tree Data Structure
+ *  Course:  Data Structures
+ *  Team:    Yousef, Nour, Malak, Jana, Lujain
+ *
+ ******************************************************************************/
+
+// RadixTree.cpp : Radix Tree Implementation
 // Team: Yousef, Nour, Malak, Jana, Lujain
 //
 #define _CRT_SECURE_NO_WARNINGS
@@ -7,7 +30,6 @@
 #include <cstring>
 #include <iostream>
 #include <string>
-
 
 using namespace std;
 
