@@ -299,45 +299,64 @@ void RadixTree::collectWords(Node* node, const char* prefix) {
     }
 }
 
-void RadixTree::getAutoSuggestions(const char* prefix) {
+void RadixTree::autoSuggest(const char* prefix) {
     if (empty()) {
-        cout << "Tree empty.\n";
+        cout << "Tree is empty. No suggestions available." << endl;
         return;
     }
 
     Node* current = myRoot;
-    const char* p = prefix;
+    int index = 0;
+    int prefixLength = strlen(prefix);
 
-    int pre = matchPrefix(current->data, p);
-    if (pre == 0 && strlen(current->data) > 0) {
-        cout << "No suggestions.\n";
-        return;
+    // First, check if we match the root's data (if any)
+    if (current->data[0] != '\0') {
+        int rootMatch = matchPrefix(current->data, prefix);
+        int rootLen = strlen(current->data);
+
+        // If root doesn't match enough of the prefix
+        if (rootMatch < rootLen && rootMatch < prefixLength) {
+            cout << "No suggestions found for the given prefix." << endl;
+            return;
+        }
+
+        index += rootMatch;
     }
 
-    p += pre;
-    while (strlen(p) > 0) {
+    // Continue traversing through children to match the entire prefix
+    while (index < prefixLength) {
         child* ch = current->children;
-        current = nullptr;
+        Node* nextNode = nullptr;
+        int matchedLen = 0;
 
+        // Find child with matching first character
         while (ch) {
-            int m = matchPrefix(ch->node->data, p);
-            if (m > 0) {
-                current = ch->node;
-                p += m;
-                break;
+            if (ch->firstChar == prefix[index]) {
+                nextNode = ch->node;
+                matchedLen = matchPrefix(nextNode->data, prefix + index);
+                if (matchedLen > 0) {
+                    break;
+                }
             }
             ch = ch->next;
         }
 
-        if (!current) {
-            cout << "No suggestions.\n";
+        if (nextNode == nullptr || matchedLen == 0) {
+            cout << "No suggestions found for the given prefix." << endl;
             return;
         }
+
+        index += matchedLen;
+        current = nextNode;
+    }
+    string currentWord;
+    for (int i = 0; i < index; i++) {
+        currentWord += prefix[i];
     }
 
+    // Collect and display all words with this prefix
     collectWords(current, prefix);
 }
-
 // =============== Timestamp & Frequency ===============
 
 long long RadixTree::getCurrentTimestamp() {
@@ -356,5 +375,6 @@ void RadixTree::incrementFrequency(const char* word) {
     if (!myRoot) return;
     search(word); // search updates frequency
 }
+
 
 
