@@ -21,7 +21,7 @@ public:
     bool isKeyFullyMatched(Node* node, const char* key, int keyLen);
     void handleSearchFailure(const char* reason);
 
-    // deletion  //lujain
+    // deletion  //lujain - jana
     bool deleteWord(const char* word);
     bool deleteRec(Node*& current, const char* word);
 
@@ -37,4 +37,5 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
