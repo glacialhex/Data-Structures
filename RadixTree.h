@@ -27,7 +27,7 @@ public:
 
     // autoSuggest
     void collectWords(Node* node, const char* prefix);
-    void getAutoSuggestions(const char* prefix);  //Nour
+    void getSuggest(const char* prefix);  //Nour
 
     // extras  //yousef
     long long getCurrentTimestamp();  
@@ -37,6 +37,7 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
 
 
