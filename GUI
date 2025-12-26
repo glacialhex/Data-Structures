@@ -1,93 +1,198 @@
-//NOUR
+//Nour and Mlak
 #include <QApplication>
 #include <QMainWindow>
+#include <QFrame>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QLineEdit>
 #include <QListWidget>
-#include <QPalette>
+#include <QMessageBox>
 #include <QDebug>
-#include <functional>
-#include <QObject>
+#include <QColor>
+#include <QPalette>
+
+// ===================== ModernButton =====================
+class ModernButton : public QPushButton {
+    Q_OBJECT
+public:
+    explicit ModernButton(const QString& text, QWidget* parent = nullptr)
+        : QPushButton(text, parent)
+    {
+        setCursor(Qt::PointingHandCursor);
+        setFixedHeight(40);
+        setButtonColor("#22C55E");
+    }
+
+    void setButtonColor(const QString& color) {
+        QColor base(color);
+        QColor hover = base.darker(115);
+
+        setStyleSheet(QString(
+            "QPushButton {"
+            " background-color: %1;"
+            " color: white;"
+            " border: none;"
+            " border-radius: 8px;"
+            " padding: 8px 16px;"
+            " font-size: 14px;"
+            "}"
+            "QPushButton:hover {"
+            " background-color: %2;"
+            "}"
+        ).arg(base.name()).arg(hover.name()));
+    }
+};
+
+// ===================== ModernLineEdit =====================
+class ModernLineEdit : public QLineEdit {
+    Q_OBJECT
+public:
+    explicit ModernLineEdit(QWidget* parent = nullptr)
+        : QLineEdit(parent)
+    {
+        setFixedHeight(40);
+        setPlaceholderText("Enter new word...");
+        setStyleSheet(
+            "QLineEdit {"
+            " border: 1px solid #D1D5DB;"
+            " border-radius: 8px;"
+            " padding: 8px;"
+            " font-size: 14px;"
+            "}"
+            "QLineEdit:focus {"
+            " border-color: #2563EB;"
+            "}"
+        );
+    }
+};
+
+// ===================== WordManagementPanel =====================
+class WordManagementPanel : public QFrame {
+    Q_OBJECT
+public:
+    explicit WordManagementPanel(QWidget* parent = nullptr)
+        : QFrame(parent)
+    {
+        setStyleSheet("QFrame { background-color: #F9FAFB; border-radius: 10px; }");
+
+        QLabel* titleLabel = new QLabel("📌 Word Management");
+        titleLabel->setStyleSheet("font-size: 16px; font-weight: bold;");
+
+        inputField = new ModernLineEdit(this);
+
+        addButton = new ModernButton("+ Add", this);
+        removeButton = new ModernButton("🗑 Remove", this);
+        removeButton->setButtonColor("#EF4444");
+
+        totalLabel = new QLabel("Total words: 0");
+
+        wordList = new QListWidget(this);
+
+        QHBoxLayout* inputLayout = new QHBoxLayout;
+        inputLayout->addWidget(inputField);
+        inputLayout->addWidget(addButton);
+
+        QVBoxLayout* mainLayout = new QVBoxLayout(this);
+        mainLayout->addWidget(titleLabel);
+        mainLayout->addLayout(inputLayout);
+        mainLayout->addWidget(removeButton);
+        mainLayout->addWidget(totalLabel);
+        mainLayout->addWidget(wordList, 1);
+
+        connect(addButton, &QPushButton::clicked, this, &WordManagementPanel::addWord);
+        connect(removeButton, &QPushButton::clicked, this, &WordManagementPanel::removeWord);
+    }
+
+    QListWidget* getWordList() const { return wordList; }
+
+private slots:
+    void addWord() {
+        QString word = inputField->text().trimmed();
+        if (word.isEmpty()) return;
+
+        wordList->addItem(word);
+        inputField->clear();
+        totalLabel->setText(QString("Total words: %1").arg(wordList->count()));
+    }
+
+    void removeWord() {
+        delete wordList->currentItem();
+        totalLabel->setText(QString("Total words: %1").arg(wordList->count()));
+    }
+
+private:
+    ModernLineEdit* inputField;
+    ModernButton* addButton;
+    ModernButton* removeButton;
+    QLabel* totalLabel;
+    QListWidget* wordList;
+};
+
+// ===================== main =====================
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-     QMainWindow mainWindow;
-    mainWindow.setWindowTitle("Search Bar Experience");
-    mainWindow.resize(1000,600);
-    QWidget *centralWidget = new QWidget(&mainWindow);
+
+    QMainWindow mainWindow;
+    mainWindow.setWindowTitle("Search + Word Manager");
+    mainWindow.resize(1000, 600);
+
+    QWidget* centralWidget = new QWidget(&mainWindow);
     mainWindow.setCentralWidget(centralWidget);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    centralWidget->setLayout(mainLayout);
-    QLabel *titlelabel = new QLabel("Search Bar EExperience");
-    titlelabel->setAlignment(Qt::AlignCenter);
-    titlelabel->setStyleSheet("color: darkblue; font-size: 20px; font-weight: 600;font-style: italic;" );
-    mainLayout->addWidget(titlelabel);
-    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(centralWidget);
+
+    QLabel* title = new QLabel("Search Bar Experience");
+    title->setAlignment(Qt::AlignCenter);
+    title->setStyleSheet("font-size: 20px; font-weight: bold;");
+    mainLayout->addWidget(title);
+
+    QHBoxLayout* horizontalLayout = new QHBoxLayout;
     mainLayout->addLayout(horizontalLayout);
-    QLineEdit *searchBox = new QLineEdit;
+
+    // 🔹 Left: Search Bar UI
+    QVBoxLayout* searchLayout = new QVBoxLayout;
+    QLineEdit* searchBox = new QLineEdit;
     searchBox->setPlaceholderText("Type to search...");
-    QLabel *hiddenLabel = new QLabel(centralWidget);
-    hiddenLabel->setStyleSheet("color: gray;");
-    hiddenLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    hiddenLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
-    hiddenLabel->hide();
-    //hiddenLabel->setGeometry(searchBox->geometry());
-   // QObject::connect(searchBox, &QLineEdit::textChanged, [=](const QString &text){
-        //
-    //qDebug() << "User typed:" << text;
-//});
-    horizontalLayout->addWidget(searchBox);
-    QListWidget *suggestionsList = new QListWidget;
-    horizontalLayout->addWidget(suggestionsList);
-    suggestionsList->addItem("cat");
-    suggestionsList->addItem("car");
-    suggestionsList->addItem("cart");
-    suggestionsList->addItem("camera");
-    //deh mo2kata le 8ayat ama narbot bel back end
-    QObject::connect(suggestionsList, &QListWidget::itemClicked,
-            [=](QListWidgetItem *item) {
-                searchBox->setText(item->text());
-            });
-    QObject::connect(suggestionsList, &QListWidget::itemDoubleClicked,
-            [=](QListWidgetItem *item) {
-                searchBox->setText(item->text());
-                qDebug() << "Confirmed:" << item->text();
-            });
+
+    QListWidget* suggestionsList = new QListWidget;
+    searchLayout->addWidget(searchBox);
+    searchLayout->addWidget(suggestionsList);
+
+    // 🔹 Right: Word Management Panel
+    WordManagementPanel* panel = new WordManagementPanel;
+
+    horizontalLayout->addLayout(searchLayout, 2);
+    horizontalLayout->addWidget(panel, 1);
+
+    // 🔹 ORIGINAL search logic (unchanged)
     QObject::connect(searchBox, &QLineEdit::textChanged,
-            [=](const QString &text) {
+        [&](const QString& text) {
+            suggestionsList->clear();
+            if (text.isEmpty()) return;
 
-        hiddenLabel->hide();
-
-        if (text.isEmpty()) return;
-        if (suggestionsList->count() == 0) return;
-
-        QString suggestion = suggestionsList->item(0)->text();
-
-        // Check if suggestion starts with what user typed
-        if (suggestion.startsWith(text)) {
-
-            QString remainder = suggestion.mid(text.length());
-
-            if (!remainder.isEmpty()) {
-               hiddenLabel->setText(text + remainder);
-                hiddenLabel->show();
+            for (int i = 0; i < panel->getWordList()->count(); ++i) {
+                QString word = panel->getWordList()->item(i)->text();
+                if (word.startsWith(text))
+                    suggestionsList->addItem(word);
             }
-        }
-    });
-    horizontalLayout->setStretch(0,2);
-    horizontalLayout->setStretch(1,1);
-    searchBox->setStyleSheet("background-color: #f1f1f0; color: blue;");
-    suggestionsList->setStyleSheet("background-color: #ffffff; color: red;");
+        });
+
+    QObject::connect(suggestionsList, &QListWidget::itemClicked,
+        [&](QListWidgetItem* item) {
+            searchBox->setText(item->text());
+        });
 
     QPalette pal = mainWindow.palette();
-    pal.setColor(QPalette::Window, Qt::lightGray); // background color
+    pal.setColor(QPalette::Window, Qt::lightGray);
     mainWindow.setPalette(pal);
     mainWindow.setAutoFillBackground(true);
 
     mainWindow.show();
-    hiddenLabel->setGeometry(searchBox->geometry());
-    hiddenLabel->raise();
     return app.exec();
 }
+
+// Add this at the end instead of the beginning
+#include "main.moc"
