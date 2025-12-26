@@ -8,22 +8,19 @@
  *      |_| |_|_____/ \___/ |_____|_| \_|\_____|
  *
  *                    Faculty of Engineering
- *                    Ain Shams University
+ *                     Ain Shams University
  *
  ******************************************************************************
  *
- *  Copyright (c) 2024 Faculty of Engineering, Ain Shams University
+ *  Copyright Ⓒ 2025 - Faculty of Engineering, Ain Shams University
  *  All Rights Reserved.
  *
  *  Project: Radix Tree Data Structure
- *  Course:  Data Structures
+ *  Course:  CSE243 - Data Structures & Algorithms
  *  Team:    Yousef, Nour, Malak, Jana, Lujain
  *
  ******************************************************************************/
 
-// RadixTree.cpp : Radix Tree Implementation
-// Team: Yousef, Nour, Malak, Jana, Lujain
-//
 #define _CRT_SECURE_NO_WARNINGS
 #include "RadixTree.h"
 #include <chrono>
@@ -81,13 +78,11 @@ int RadixTree::SearchPrefix(const char *word, Node *currentNode) { // Nour
 }
 
 void RadixTree::addchild(Node *parent, Node *childnode) { // Malak
-  child *newchild = new child(
-      childnode->data[0],
-      childnode); // saved first char, and childnode is the node of child itself
-  newchild->next =
-      parent
-          ->children; // siblings of new child is now the children of the parent
-  parent->children = newchild; // children of parent is now the new child
+  // saved first char, w childnode howa el node bta3 el child nafsaha
+  child *newchild = new child(childnode->data[0], childnode);
+  newchild->next = parent->children; // siblings bto3 el new child homa el
+                                     // children bto3 el parent
+  parent->children = newchild; // children bto3 el parent ba2a el new child
 }
 
 // ================ INSERT ================
@@ -629,3 +624,16 @@ Node *RadixTree::findNodeForPrefix(const char *prefix) { // Malak
 }
 
 // ================ END OF FILE ================
+
+// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
+// Debug program: F5 or Debug > Start Debugging menu
+
+// Tips for Getting Started:
+//   1. Use the Solution Explorer window to add/manage files
+//   2. Use the Team Explorer window to connect to source control
+//   3. Use the Output window to see build output and other messages
+//   4. Use the Error List window to view errors
+//   5. Go to Project > Add New Item to create new code files, or Project > Add
+//   Existing Item to add existing code files to the project
+//   6. In the future, to open this project again, go to File > Open > Project
+//   and select the .sln file
