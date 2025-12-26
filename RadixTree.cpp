@@ -78,27 +78,27 @@ int RadixTree::SearchPrefix(const char *word, Node *currentNode) { // Nour
 }
 
 void RadixTree::addchild(Node *parent, Node *childnode) { // Malak
-  // saved first char, w childnode howa el node bta3 el child nafsaha
+  // first char stored, w childnode howa el node bta3 el child nafsaha
   child *newchild = new child(childnode->data[0], childnode);
-  newchild->next = parent->children; // siblings bto3 el new child homa el
-                                     // children bto3 el parent
-  parent->children = newchild; // children bto3 el parent ba2a el new child
+  newchild->next =
+      parent->children; // siblings bto3 el new child = children bto3 el parent
+  parent->children = newchild; // parent children pointer updated lel new child
 }
 
 // ================ INSERT ================
-// el insert 3andaha cases kteera, lazem nفهم kol wa7da
+// el insert feha cases kteera, kol case handled differently
 
 void RadixTree::insert(const char *word) { // Nour + Malak
-  // case1: el tree fadya - n3mel root gedeed
+  // case1: tree fadya - root gedeed created
   if (empty()) {
     myRoot = new Node(word);
     myRoot->ended = true;
-    myRoot->frequency = 1;                     // Yousef: Initialize frequency
-    myRoot->timestamp = getCurrentTimestamp(); // Yousef: Set timestamp
+    myRoot->frequency = 1;                     // frequency initialized
+    myRoot->timestamp = getCurrentTimestamp(); // timestamp set
     return;
   }
 
-  // case 3: lw la2ena common prefix
+  // case 3: common prefix found
   bool isPrefix = false;
   Node *parentNode = myRoot;
   child *ch = parentNode->children;
@@ -115,16 +115,16 @@ void RadixTree::insert(const char *word) { // Nour + Malak
     if (prefix > 0) { // case exact match
       isPrefix = true;
 
-      // el kelma mawgooda already - bas ne-update el frequency
+      // el kelma mawgooda already - frequency updated
       if (prefix == nodeLen && prefix == wordLen) {
         ch->node->ended = true;
-        ch->node->frequency++; // Yousef: zawed el frequency
-        ch->node->timestamp = getCurrentTimestamp(); // Yousef: 7aded el wa2t
+        ch->node->frequency++;                       // frequency incremented
+        ch->node->timestamp = getCurrentTimestamp(); // timestamp updated
         return;
       }
 
-      // el kelma el gdeeda prefix mn node mawgooda - lazem ne-split
-      // masalan: 3andena "testing" w 3ayzeen ned5ol "test"
+      // el kelma el gdeeda = prefix mn node mawgooda - split required
+      // example: "testing" exists, "test" inserted = split
       if (prefix == wordLen && prefix < nodeLen) {
         Node *oldnode = ch->node;       // el node el 2adeema
         Node *newnode = new Node(word); // node lel kelma el gdeeda
@@ -132,11 +132,11 @@ void RadixTree::insert(const char *word) { // Nour + Malak
         newnode->frequency = 1;
         newnode->timestamp = getCurrentTimestamp();
 
-        // na5od el ba2y mn el kelma el 2adeema w n7oto f suffix
+        // el ba2y mn el kelma el 2adeema stored f suffix
         Node *suffix = new Node(oldnode->data + prefix);
         suffix->ended = oldnode->ended;
-        suffix->frequency = oldnode->frequency; // ne7afez 3al frequency
-        suffix->timestamp = oldnode->timestamp; // ne7afez 3al timestamp
+        suffix->frequency = oldnode->frequency; // frequency preserved
+        suffix->timestamp = oldnode->timestamp; // timestamp preserved
         suffix->children = oldnode->children;
         newnode->children = nullptr;
         addchild(newnode, suffix);
@@ -145,10 +145,10 @@ void RadixTree::insert(const char *word) { // Nour + Malak
         return;
       }
 
-      // el kelma el gdeeda akbar mn el node - ned5ol el ba2y ka child
-      // masalan: 3andena "test" w 3ayzeen ned5ol "testing"
+      // el kelma el gdeeda akbar mn el node - el ba2y inserted as child
+      // example: "test" exists, "testing" inserted = "ing" added as child
       if (prefix == nodeLen && wordLen > nodeLen) {
-        Node *newNode = new Node(word + nodeLen); // na5od bs el ba2y
+        Node *newNode = new Node(word + nodeLen); // el ba2y bs
         newNode->ended = true;
         newNode->frequency = 1;
         newNode->timestamp = getCurrentTimestamp();
@@ -157,8 +157,8 @@ void RadixTree::insert(const char *word) { // Nour + Malak
         return;
       }
 
-      // Partial overlap - lazem ne-split el node le 2 parts
-      // masalan: 3andena "team" w 3ayzeen ned5ol "test" - el common howa "te"
+      // Partial overlap - node split to 2 parts
+      // example: "team" exists, "test" inserted - common = "te"
       if (prefix > 0 && prefix < nodeLen) {
         Node *newTop = new Node(); // node gedeed lel common prefix
         strncpy(newTop->data, ch->node->data, prefix);
@@ -195,7 +195,7 @@ void RadixTree::insert(const char *word) { // Nour + Malak
     ch = ch->next;
   }
 
-  // case 2: mafe4 common prefix - ned5ol el kelma directly
+  // case 2: mafe4 common prefix - el kelma inserted directly
   Node *newnode = new Node(word);
   newnode->ended = true;
   newnode->frequency = 1;
@@ -205,35 +205,35 @@ void RadixTree::insert(const char *word) { // Nour + Malak
 }
 
 // ================ DELETE ================
-// el delete b recursion - ne-traverse el tree w nems7 el node
+// delete b recursion - tree traversal w node deletion
 
 bool RadixTree::deleteRec(Node *&current, const char *word) { // Lujain + Jana
   if (!current)
-    return false; // mafe4 node - mesh mawgood
+    return false; // node mafe4 - mesh mawgood
 
   int prefix = SearchPrefix(word, current);
   int len = strlen(current->data);
   int wlen = strlen(word);
 
-  // lw el prefix = 0 - el kelma mesh mawgooda
+  // prefix = 0 means el kelma mesh mawgooda
   if (prefix == 0)
     return false;
 
-  // CASE 1: el kelma bet5alas hena exactly
+  // CASE 1: el kelma ends exactly here
   if (prefix == wlen && prefix == len) {
     if (!current->ended)
-      return false; // el kelma mesh stored - msh valid word
+      return false; // kelma mesh stored - invalid word
 
-    current->ended = false; // ne-unmark el flag - el kelma mos7et
+    current->ended = false; // flag unmarked - kelma deleted
 
-    // lw mafe4 children - nems7 el node 5ales
+    // mafe4 children - node deleted 5ales
     if (current->children == nullptr) {
       delete current;
       current = nullptr;
       return true;
     }
 
-    // lw 3andena child wa7ed bs - ne-merge ma3 el parent (compress el tree)
+    // child wa7ed bs - merged ma3 el parent (tree compression)
     if (current->children && current->children->next == nullptr) {
       Node *childNode = current->children->node;
       strcat(current->data, childNode->data);
@@ -298,7 +298,7 @@ bool RadixTree::deleteWord(const char *word) { // Lujain + Jana
 }
 
 // ================ SEARCH ================
-// el search ben-traverse el tree w neshof lw el kelma mawgooda
+// search = tree traversal w checking lw el kelma mawgooda
 
 Node *RadixTree::traverseEdge(Node *node, const char *keySegment,
                               int &matchedLen) { // Yousef
@@ -308,10 +308,10 @@ Node *RadixTree::traverseEdge(Node *node, const char *keySegment,
       matchedLen = matchPrefix(ch->node->data, keySegment);
       int nodeLen = strlen(ch->node->data);
 
-      if (matchedLen == nodeLen) { // full match - nekamel el traversal
+      if (matchedLen == nodeLen) { // full match - traversal continues
         return ch->node;
       }
-      return nullptr; // partial match - el key mesh mawgood
+      return nullptr; // partial match - key mesh mawgood
     }
     ch = ch->next;
   }
@@ -338,12 +338,12 @@ bool RadixTree::search(const char *key) { // Yousef
   int keyLen = strlen(key);
   int keyIndex = 0;
 
-  // n-check el root el awel
+  // root checked first
   int rootMatch = matchPrefix(myRoot->data, key);
   int rootLen = strlen(myRoot->data);
 
   if (rootMatch < rootLen) {
-    handleSearchFailure("Root prefix mismatch"); // el root mesh matching
+    handleSearchFailure("Root prefix mismatch"); // root mesh matching
     return false;
   }
 
