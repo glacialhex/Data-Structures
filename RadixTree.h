@@ -25,9 +25,9 @@ public:
     bool deleteWord(const char* word);
     bool deleteRec(Node*& current, const char* word);
 
-    // autocomplete
-    void collectWords(Node* node, const char* prefix);  //nour
-    void getAutocompletions(const char* prefix);  //jana
+    // autocomplete // jana
+    void collectWords(Node* node, const char* prefix);
+    void getAutocompletions(const char* prefix);
 
     // extras  //yousef
     long long getCurrentTimestamp();  
@@ -37,5 +37,6 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
 
