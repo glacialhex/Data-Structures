@@ -53,6 +53,7 @@ void RadixTree::addchild(Node* parent, Node* childnode) {
 // ================= INSERT =================
 
 void RadixTree::insert(const char* word) {
+    // case1: empty tree
     if (empty()) {
         myRoot = new Node(word);
         myRoot->ended = true;
@@ -61,99 +62,164 @@ void RadixTree::insert(const char* word) {
         return;
     }
 
-    Node* parent = nullptr;
-    Node* current = myRoot;
-    const char* w = word;
+    // Special case: if root has data and first char doesn't match,
+    // we need to create a new empty root
+    if (myRoot->data[0] != '\0' && myRoot->data[0] != word[0]) {
+        // Create new empty root
+        Node* newRoot = new Node(""); // Empty string
 
-    while (current) {
-        int p = matchPrefix(current->data, w);
-        
-        if (p < strlen(current->data)) { 
-            // split required
-            Node* old = new Node(current->data + p);
-            old->ended = current->ended;
-            old->frequency = current->frequency;
-            old->timestamp = current->timestamp;
-            old->children = current->children;
+        // Move current root to be a child
+        addchild(newRoot, myRoot);
 
-            current->data[p] = '\0';
-            current->ended = false;
-            current->children = nullptr;
+        // Create new node for the new word
+        Node* newNode = new Node(word);
+        newNode->ended = true;
+        newNode->frequency = 1;
+        newNode->timestamp = getCurrentTimestamp();
+        addchild(newRoot, newNode);
 
-            addchild(current, old);
+        // Update root
+        myRoot = newRoot;
+        return;
+    }
 
-            if (*(w + p) == '\0') {
-                current->ended = true;
-                current->frequency++;
-                current->timestamp = getCurrentTimestamp();
+    Node* currentNode = myRoot;
+    Node* parentNode = nullptr;
+    child* currentChild = nullptr;
+    const char* remaining = word;
+
+    while (true) {
+        int prefix = SearchPrefix(remaining, currentNode);
+        int nodeLen = strlen(currentNode->data);
+        int remainingLen = strlen(remaining);
+
+        // Case 1: Need to split current node
+        if (prefix < nodeLen) {
+            // Split the current node
+            Node* suffixNode = new Node(currentNode->data + prefix);
+            suffixNode->ended = currentNode->ended;
+            suffixNode->frequency = currentNode->frequency;
+            suffixNode->timestamp = currentNode->timestamp;
+            suffixNode->children = currentNode->children;
+
+            // Truncate current node
+            currentNode->data[prefix] = '\0';
+            currentNode->ended = false;
+            currentNode->frequency = 0;
+            currentNode->children = nullptr;
+
+            // Add suffix as child
+            addchild(currentNode, suffixNode);
+
+            // If word ends exactly here
+            if (remaining[prefix] == '\0') {
+                currentNode->ended = true;
+                currentNode->frequency = 1;
+                currentNode->timestamp = getCurrentTimestamp();
                 return;
             }
 
-            Node* nw = new Node(w + p);
-            nw->ended = true;
-            nw->frequency = 1;
-            nw->timestamp = getCurrentTimestamp();
-            addchild(current, nw);
+            // Create node for remaining part of new word
+            Node* newWordNode = new Node(remaining + prefix);
+            newWordNode->ended = true;
+            newWordNode->frequency = 1;
+            newWordNode->timestamp = getCurrentTimestamp();
+            addchild(currentNode, newWordNode);
             return;
         }
 
-        if (p == strlen(w)) {
-            current->ended = true;
-            current->frequency++;
-            current->timestamp = getCurrentTimestamp();
+        // Move past matched prefix
+        remaining += prefix;
+        remainingLen = strlen(remaining);
+
+        // Case 2: Exact match at current node
+        if (remainingLen == 0) {
+            currentNode->ended = true;
+            currentNode->frequency++;
+            currentNode->timestamp = getCurrentTimestamp();
             return;
         }
 
-        // move to child
-        child* ch = current->children;
-        parent = current;
-        current = nullptr;
+        // Look for child with matching first character
+        child* ch = currentNode->children;
+        Node* nextNode = nullptr;
+        child* prevChild = nullptr;
 
         while (ch) {
-            if (ch->firstChar == *(w + p)) {
-                current = ch->node;
+            if (ch->firstChar == *remaining) {
+                nextNode = ch->node;
+                currentChild = ch;
                 break;
             }
+            prevChild = ch;
             ch = ch->next;
         }
 
-        if (!current) {
-            Node* nw = new Node(w + p);
-            nw->ended = true;
-            nw->frequency = 1;
-            nw->timestamp = getCurrentTimestamp();
-            addchild(parent, nw);
+        // Case 3: No matching child - add as new child
+        if (!nextNode) {
+            Node* newNode = new Node(remaining);
+            newNode->ended = true;
+            newNode->frequency = 1;
+            newNode->timestamp = getCurrentTimestamp();
+            addchild(currentNode, newNode);
             return;
         }
 
-        w += p;
+        // Case 4: Continue with matching child
+        parentNode = currentNode;
+        currentNode = nextNode;
     }
 }
 
 // ================= SEARCH =================
 
-bool RadixTree::search(const char* key) {
+bool RadixTree::search(const char* word) {
     if (empty()) return false;
+
     Node* current = myRoot;
-    const char* k = key;
+    const char* remaining = word;
+
+    // If root has empty data, skip the prefix check
+    if (current->data[0] != '\0') {
+        int prefixLen = matchPrefix(current->data, remaining);
+        if (prefixLen < strlen(current->data)) {
+            return false;
+        }
+        remaining += prefixLen;
+    }
 
     while (current) {
-        int p = matchPrefix(current->data, k);
-        if (p < strlen(current->data)) return false;
-        if (p == strlen(k)) return current->ended;
+        // If we've consumed all characters
+        if (*remaining == '\0') {
+            return current->ended;
+        }
 
+        // Look for child with matching next character
         child* ch = current->children;
-        current = nullptr;
+        Node* nextNode = nullptr;
+
         while (ch) {
-            if (ch->firstChar == *(k + p)) {
-                current = ch->node;
+            if (ch->firstChar == *remaining) {
+                nextNode = ch->node;
                 break;
             }
             ch = ch->next;
         }
-        if (!current) return false;
-        k += p;
+
+        if (!nextNode) {
+            return false;
+        }
+
+        // Check prefix match with next node
+        int prefixLen = matchPrefix(nextNode->data, remaining);
+        if (prefixLen < strlen(nextNode->data)) {
+            return false;
+        }
+
+        remaining += prefixLen;
+        current = nextNode;
     }
+
     return false;
 }
 
@@ -290,3 +356,4 @@ void RadixTree::incrementFrequency(const char* word) {
     if (!myRoot) return;
     search(word); // search updates frequency
 }
+
