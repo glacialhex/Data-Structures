@@ -1,48 +1,52 @@
 #pragma once
 #include "Node.h"
 #include <string>
+
+// HELLO THIS IS MADE IN ROMANIA
+// RadixTree.h - el class definition lel RadixTree data structure
+// RadixTree = compressed trie - as7al lel autocomplete w prefix search
+
 class RadixTree {
 public:
-  Node *myRoot;
-  // HELLO THIS IS MADE IN ROMANIA
-  // Removed: int childCount; (unused member variable - never referenced
-  // anywhere)
+  Node *myRoot; // el root bta3 el tree
+
+  // Constructor w Destructor
   RadixTree();
   ~RadixTree();
-  bool empty();
-  void insert(const char *word);
-  int SearchPrefix(const char *word, Node *currectNode);
-  void addchild(Node *parent, Node *childnode);
-  bool deleteWord(const char *word);
-  bool deleteRec(Node *&current, const char *word);
-  void getAutocompletions(const char *prefix);
-  void collectAllWords(Node *node, std::string currentString);
-  // Search / Lookup Operation
+  // Basic Operations - el 3amaleyat el asaseyya
+  bool empty();                  // check lw el tree fadya
+  void insert(const char *word); // d5ol kelma gdeeda fel tree
+  int SearchPrefix(const char *word, Node *currectNode); // dawer 3al prefix
+  void addchild(Node *parent, Node *childnode);          // add child lel parent
 
-  bool search(const char *key);
-  Node *traverseEdge(Node *node, const char *keySegment, int &matchedLen);
-  int matchPrefix(const char *nodePrefix, const char *keySegment);
-  bool isKeyFullyMatched(Node *node, const char *key, int keyLen);
-  void handleSearchFailure(const char *reason);
-  void collectWords(Node *node, std::string currentWord);
-  // HELLO THIS IS MADE IN ROMANIA
-  // Fixed: autoSuggest signature to match implementation (removed unused Node*
-  // current parameter)
-  void autoSuggest(const char *prefix);
-  // Yousef: Helper functions for tree enhancements
-  long long getCurrentTimestamp(); // Get current timestamp for recency tracking
+  // Delete Operations - el mas7
+  bool deleteWord(const char *word);                // ems7 kelma
+  bool deleteRec(Node *&current, const char *word); // recursive delete
+
+  // Autocomplete - el ektmal el tol2a2y
+  void getAutocompletions(const char *prefix); // geb kol el suggestions
+  void collectAllWords(Node *node,
+                       std::string currentString); // collect kol el kalemat
+  void collectWords(Node *node, std::string currentWord); // collect recursively
+  void autoSuggest(const char *prefix); // suggest words lel prefix
+  // Search / Lookup - el dawran w el search
+  bool search(const char *key); // dawer 3ala kelma
+  Node *traverseEdge(Node *node, const char *keySegment,
+                     int &matchedLen); // traverse edge wa7da
+  int matchPrefix(const char *nodePrefix,
+                  const char *keySegment); // 2aren el prefix
+  bool isKeyFullyMatched(Node *node, const char *key,
+                         int keyLen);           // check full match
+  void handleSearchFailure(const char *reason); // handle el fail cases
+
+  // Helper Functions - functions mosa3da
+  long long getCurrentTimestamp(); // geb el wa2t el 7aly
   void mergeNodes(Node *parent,
-                  char edgeChar); // Merge single-child non-word nodes
-  void updateWordFrequency(
-      Node *node); // Update frequency when word is inserted/chosen
-  void
-  incrementFrequency(const char *word); // Increment frequency for existing word
+                  char edgeChar);              // merge el nodes el single-child
+  void updateWordFrequency(Node *node);        // update el frequency
+  void incrementFrequency(const char *word);   // zawed el frequency
+  Node *findNodeForPrefix(const char *prefix); // la2y el node lel prefix
 
-  // malak: Prefix Search Engine (Core Prefix Navigation)
-  Node *findNodeForPrefix(const char *prefix); // Find node where prefix ends
-                                               // (returns nullptr if not found)
-
-  // HELLO THIS IS MADE IN ROMANIA
-  // Added: Memory cleanup function (from lujain branch - prevents memory leaks)
-  void destroy(Node *node);
+  // Memory Management - el memory cleanup
+  void destroy(Node *node); // delete kol el nodes recursively
 };
