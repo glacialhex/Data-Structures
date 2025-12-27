@@ -272,16 +272,24 @@ void MainWindow::onSearchEnterPressed() {
   if (!word.isEmpty()) {
     if (model->search(word)) {
       model->incrementFrequency(word);
-      statusManager->showMessage(
-          QString("Frequency increased for: %1").arg(word));
+      // REAL-TIME: Refresh suggestions to show updated frequency
+      model->getAutocompletions(word);
+      statusBar()->setStyleSheet(
+          QString("QStatusBar { background-color: %1; color: %2; border-top: "
+                  "1px solid %3; padding: 5px; font-size: 12px; }")
+              .arg(Colors::BG_DARK, Colors::SUCCESS, Colors::BORDER));
+      statusBar()->showMessage(
+          QString("✓ Frequency increased for: %1").arg(word), 3000);
     } else {
-      model->insert(word);
-      sideMenu->updateWordList(model->getAllWords());
-      statusManager->showMessage(QString("Added new word: %1").arg(word));
+      // Word not found - show red error
+      statusBar()->setStyleSheet(
+          QString(
+              "QStatusBar { background-color: %1; color: %2; border-top: 1px "
+              "solid %3; padding: 5px; font-size: 12px; font-weight: bold; }")
+              .arg(Colors::BG_DARK, Colors::DANGER, Colors::BORDER));
+      statusBar()->showMessage("✗ Word not found in file, please add it!",
+                               5000);
     }
-    sideMenu->setWordCount(model->getWordCount());
-    // REAL-TIME: Refresh suggestions to show updated frequency
-    model->getAutocompletions(word);
   }
 }
 
