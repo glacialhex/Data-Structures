@@ -28,7 +28,7 @@ public:
     // autoSuggest //nour
     void collectWords(Node* node, const char* prefix);
     void getSuggest(const char* prefix);  
-   // autocomplete  //jana
+   string autoCompleteOne(const char* prefix);//lujain & jana
 
 
     // extras  //yousef
@@ -39,6 +39,7 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
 
 
