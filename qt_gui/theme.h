@@ -16,7 +16,7 @@ inline const QString TEXT_PRIMARY = "#f0f6fc";
 inline const QString TEXT_SECONDARY = "#8b949e";
 
 // Accent colors - el accent
-inline const QString PRIMARY = "#58a6ff";
+inline const QString PRIMARY = "#b388ff"; // Lavender Purple
 inline const QString SUCCESS = "#3fb950";
 inline const QString WARNING = "#d29922";
 inline const QString DANGER = "#f85149";
