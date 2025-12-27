@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-// HELLO THIS IS MADE IN ROMANIA
 // Main.cpp - test file lel RadixTree
 // kol el tests hena - insert, search, delete, autocomplete
 
@@ -86,7 +85,7 @@ int main() {
   std::cout << "\nTest 4: Testing Search Operation\n";
   std::cout << "================================\n\n";
 
-  // helper lambda lel search test - function saghayara b te-run el test
+  // helpr lambda lel search test - function soghayara bet-run el test
   auto testSearch = [&](const char *word, bool expected) {
     bool result = tree.search(word);
     if (result == expected) {
@@ -137,7 +136,7 @@ int main() {
   std::cout << "\nTest 5: Testing Deletion Operation\n";
   std::cout << "===================================\n\n";
 
-  // helper lambda lel delete test - b te-check el mas7 w el search ba3daha
+  // helpr lambda lel delete test - b te-check el mas7 w el search ba3daha
   auto testDelete = [&](const char *word, bool expectedDelete,
                         bool expectedSearchAfter) {
     bool deleteResult = tree.deleteWord(word);
@@ -172,7 +171,6 @@ int main() {
   testSearch("slowly", true); // slowly shoudl still exist
   testSearch("apple", true);  // apple should still exist
 
-  // HELLO THIS IS MADE IN ROMANIA
   // Test 6: Autocomplete - el ektmal el tol2a2y
   // b ye-print kol el suggestions lel prefix el mo3ayan
   std::cout << "\nTest 6: Testing Autocomplete (Direct Printing)\n";
@@ -215,6 +213,18 @@ int main() {
   std::cout << "Results:\n";
   tree.getAutocompletions("slow");
   std::cout << "  [INFO] Verify above output contains: slow, slower, slowly\n";
+  passed++;
+
+  // ==========================================================
+
+  // Test 7: Persistence (Loading Dictionary)
+  std::cout << "\nTest 7: Persistence (Loading Dictionary)\n";
+  std::cout << "========================================\n";
+  tree.loadFromFile("dictionary.txt");
+  // Dictionary file was generated from system dictionary
+
+  // Test Saving
+  tree.saveToFile("output_tree.txt");
   passed++;
 
   // ==========================================================

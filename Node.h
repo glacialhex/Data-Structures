@@ -1,5 +1,4 @@
 #pragma once
-// HELLO THIS IS MADE IN ROMANIA
 // Node.h - el node structure lel RadixTree
 struct Node;
 struct child {
@@ -9,13 +8,14 @@ struct child {
   child(char ch, Node *node);
 };
 struct Node {
-  char data[50];       // el label bta3 el node - el characters el stored
-  bool ended;          // isWord marker - lw true yeb2a end of word
-  int frequency;       // 3aded marat el insertion/selection
-  long long timestamp; // el wa2t lel recency scoring
-  child *children;     // pointer lel awel child
+  char *data;          // Dynamic pointer for label (saves memory)
+  bool ended;          // isWord marker
+  int frequency;       // 3aded marat el insertion
+  long long timestamp; // timestamp
+  child *children;     // pointer lel children
   Node();
   Node(const char *label);
+  ~Node(); // Destructor to free data
 
   // Helper Functions - functions mosa3da
   bool isLeaf() const;       // check lw el node malhash children

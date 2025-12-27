@@ -1,0 +1,5 @@
+/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead.dir
+/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/edit_cache.dir
+/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/rebuild_cache.dir
+/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen_timestamp_deps.dir
+/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir

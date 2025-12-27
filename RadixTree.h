@@ -2,7 +2,6 @@
 #include "Node.h"
 #include <string>
 
-// HELLO THIS IS MADE IN ROMANIA
 // RadixTree.h - el class definition lel RadixTree data structure
 // RadixTree = compressed trie - as7al lel autocomplete w prefix search
 
@@ -14,8 +13,9 @@ public:
   RadixTree();
   ~RadixTree();
   // Basic Operations - el 3amaleyat el asaseyya
-  bool empty();                  // check lw el tree fadya
-  void insert(const char *word); // d5ol kelma gdeeda fel tree
+  bool empty();                            // check lw el tree fadya
+  Node *getRoot() const { return myRoot; } // Qt GUI accessor
+  void insert(const char *word);           // d5ol kelma gdeeda fel tree
   int SearchPrefix(const char *word, Node *currectNode); // dawer 3al prefix
   void addchild(Node *parent, Node *childnode);          // add child lel parent
 
@@ -27,8 +27,6 @@ public:
   void getAutocompletions(const char *prefix); // geb kol el suggestions
   void collectAllWords(Node *node,
                        std::string currentString); // collect kol el kalemat
-  void collectWords(Node *node, std::string currentWord); // collect recursively
-  void autoSuggest(const char *prefix); // suggest words lel prefix
   // Search / Lookup - el dawran w el search
   bool search(const char *key); // dawer 3ala kelma
   Node *traverseEdge(Node *node, const char *keySegment,
@@ -42,11 +40,21 @@ public:
   // Helper Functions - functions mosa3da
   long long getCurrentTimestamp(); // geb el wa2t el 7aly
   void mergeNodes(Node *parent,
-                  char edgeChar);              // merge el nodes el single-child
-  void updateWordFrequency(Node *node);        // update el frequency
-  void incrementFrequency(const char *word);   // zawed el frequency
-  Node *findNodeForPrefix(const char *prefix); // la2y el node lel prefix
+                  char edgeChar);       // merge el nodes el single-child
+  void updateWordFrequency(Node *node); // update el frequency
+
+  // New Helper for optimization
+  void splitNode(Node *parent, child *ch,
+                 int matchedLen); // split node lel iteraitve insert
 
   // Memory Management - el memory cleanup
   void destroy(Node *node); // delete kol el nodes recursively
+
+  // Persistence - el 7efz w el esterga3
+  void saveToFile(const char *filename);   // save tree to file
+  void loadFromFile(const char *filename); // load tree from file
+
+  // Persistence Helper
+  void writeWordsToFile(Node *node, std::string currentString,
+                        std::ofstream &file);
 };
