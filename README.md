@@ -3,7 +3,8 @@
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
 [![Qt6](https://img.shields.io/badge/Qt-6.x-41CD52.svg)](https://www.qt.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-lightgrey.svg)]()
+[![macOS](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white)]()
+[![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat&logo=windows&logoColor=white)]()
 
 A high-performance autocomplete engine powered by an optimized **Radix Tree** (Patricia Trie) with a beautiful Qt6 GUI. Features ghost-text suggestions, frequency-based ranking, and real-time dictionary management.
 

@@ -171,12 +171,12 @@ int main() {
   testSearch("slowly", true); // slowly shoudl still exist
   testSearch("apple", true);  // apple should still exist
 
-  // Test 6: Autocomplete - el ektmal el tol2a2y
+  // Test 6: Autocomplete
   // b ye-print kol el suggestions lel prefix el mo3ayan
   std::cout << "\nTest 6: Testing Autocomplete (Direct Printing)\n";
   std::cout << "===============================================\n\n";
 
-  // Insert kalemat gedeed lel autocomplete test
+  // Insert kalemat gedeeda lel autocomplete test
   tree.insert("car");
   tree.insert("cart");
   tree.insert("carpet");
