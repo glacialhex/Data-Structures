@@ -1,17 +1,23 @@
 #pragma once
+// Node.h - el node structure lel RadixTree
 struct Node;
 struct child {
-	char firstChar; //by store awl harf bs mn el label 3shan yb2a as7al while searching
-	Node* node;     //points to the child itself
-	child* next;        //siblings
-	child(char ch, Node* node);
+  char firstChar; // awl harf bs mn el label - as7al lel searching
+  Node *node;     // pointer lel child node nafsaha
+  child *next;    // siblings - el e5wat bto3 el child
+  child(char ch, Node *node);
 };
 struct Node {
-	char data[50]; //dah 3shan a store el kalma elly fe elnode
-	bool ended;
-    int frequency;
-	child* children;
-	Node();
-	Node(const char* label);
-};
+  char *data;          // Dynamic pointer for label (saves memory)
+  bool ended;          // isWord marker
+  int frequency;       // 3aded marat el insertion
+  long long timestamp; // timestamp
+  child *children;     // pointer lel children
+  Node();
+  Node(const char *label);
+  ~Node(); // Destructor to free data
 
+  // Helper Functions - functions mosa3da
+  bool isLeaf() const;       // check lw el node malhash children
+  int getChildCount() const; // 3od el children
+};

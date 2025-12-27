@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>assets/logo_ahead.png</file>
+        <file>assets/logo_ain_shams.png</file>
+        <file>assets/logo_uel.png</file>
+    </qresource>
+</RCC>
