@@ -153,44 +153,45 @@ void MainWindow::setupUI() {
 
   contentLayout->addStretch();
 
-  // ===== CREDITS BAR =====
-  QFrame *creditsFrame = new QFrame();
-  creditsFrame->setStyleSheet(
-      QString("QFrame { background-color: %1; border-top: 1px solid %2; "
-              "padding: 15px; }")
-          .arg(Colors::BG_MEDIUM, Colors::BORDER));
+  // ===== CREDITS BAR (Transparent) =====
+  QWidget *creditsWidget = new QWidget();
+  creditsWidget->setStyleSheet("background: transparent;");
 
-  QVBoxLayout *creditsLayout = new QVBoxLayout(creditsFrame);
+  QVBoxLayout *creditsLayout = new QVBoxLayout(creditsWidget);
   creditsLayout->setContentsMargins(20, 15, 20, 15);
-  creditsLayout->setSpacing(8);
+  creditsLayout->setSpacing(6);
 
-  QLabel *teamLabel =
-      new QLabel("👥 Team: Marwan Khaled (221002058) • Nour Hesham (221001657) "
-                 "• Yousef Hesham (221001911)");
-  teamLabel->setAlignment(Qt::AlignCenter);
-  teamLabel->setStyleSheet(
-      QString("QLabel { color: %1; font-size: 13px; font-weight: bold; "
-              "background: transparent; }")
+  QLabel *submittedLabel = new QLabel("Submitted By:");
+  submittedLabel->setAlignment(Qt::AlignCenter);
+  submittedLabel->setStyleSheet(
+      QString("QLabel { color: %1; font-size: 14px; font-weight: bold; }")
           .arg(Colors::TEXT_PRIMARY));
 
+  QLabel *teamLabel =
+      new QLabel("Jana Tarek Nayel (24P0327) • Lujain Mohamed Helmi (24P0284)\n"
+                 "Malak Mostafa Ali (24P0239) • Nour Mostafa Melegy (24P0176)\n"
+                 "Yousef Mohamed Helmy (20P7954)");
+  teamLabel->setAlignment(Qt::AlignCenter);
+  teamLabel->setStyleSheet(QString("QLabel { color: %1; font-size: 12px; }")
+                               .arg(Colors::TEXT_SECONDARY));
+
   QLabel *uniLabel =
-      new QLabel("🏛️ Ain Shams University / University of East London");
+      new QLabel("Ain Shams University • University of East London");
   uniLabel->setAlignment(Qt::AlignCenter);
-  uniLabel->setStyleSheet(
-      QString("QLabel { color: %1; font-size: 12px; background: transparent; }")
-          .arg(Colors::TEXT_SECONDARY));
+  uniLabel->setStyleSheet(QString("QLabel { color: %1; font-size: 11px; }")
+                              .arg(Colors::TEXT_SECONDARY));
 
-  QLabel *licenseLabel = new QLabel("📄 MIT License • © 2025 Ahead Team");
+  QLabel *licenseLabel = new QLabel("© 2025 Ahead Team • MIT License");
   licenseLabel->setAlignment(Qt::AlignCenter);
-  licenseLabel->setStyleSheet(
-      QString("QLabel { color: %1; font-size: 11px; background: transparent; }")
-          .arg(Colors::TEXT_SECONDARY));
+  licenseLabel->setStyleSheet(QString("QLabel { color: %1; font-size: 10px; }")
+                                  .arg(Colors::TEXT_SECONDARY));
 
+  creditsLayout->addWidget(submittedLabel);
   creditsLayout->addWidget(teamLabel);
   creditsLayout->addWidget(uniLabel);
   creditsLayout->addWidget(licenseLabel);
 
-  contentLayout->addWidget(creditsFrame);
+  contentLayout->addWidget(creditsWidget);
 
   mainLayout->addWidget(contentWidget, 1);
 
