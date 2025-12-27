@@ -3,6 +3,10 @@
 #include <iostream>
 #include <string>
 
+// HELLO THIS IS MADE IN ROMANIA
+// Main.cpp - test file lel RadixTree
+// kol el tests hena - insert, search, delete, autocomplete
+
 int main() {
   RadixTree tree;
   int passed = 0;
@@ -11,7 +15,7 @@ int main() {
   std::cout << "Test 1: Inserting words into Radix Tree\n";
   std::cout << "========================================\n\n";
 
-  // Test basic insertion
+  // Test basic insertion - ned5ol kalemat fel tree
   std::cout << "Inserting 'test': ";
   tree.insert("test");
   std::cout << "Done\n";
@@ -51,8 +55,8 @@ int main() {
   std::cout << "\nTest 2: Testing edge cases\n";
   std::cout << "==========================\n\n";
 
-  // Test edge cases - simplified to avoid known edge case issues
-  // Note: Reinserting words can cause issues in certain tree structures
+  // Test edge cases - el cases el sa3ba
+  // Note: reinserting words can cause issues - el reinsertion feha moshkela
   std::cout << "Inserting 'to' (should create partial overlap with 'toast'): ";
   tree.insert("to");
   std::cout << "Done\n";
@@ -82,7 +86,7 @@ int main() {
   std::cout << "\nTest 4: Testing Search Operation\n";
   std::cout << "================================\n\n";
 
-  // helpr lambda to run a serach test
+  // helper lambda lel search test - function saghayara b te-run el test
   auto testSearch = [&](const char *word, bool expected) {
     bool result = tree.search(word);
     if (result == expected) {
@@ -97,7 +101,8 @@ int main() {
     }
   };
 
-  std::cout << "Testing words that SHOULD be found:\n";
+  std::cout
+      << "Testing words that SHOULD be found:\n"; // el kalemat el lazem tetla2a
   testSearch("test", true);
   testSearch("team", true);
   testSearch("tea", true);
@@ -113,7 +118,8 @@ int main() {
   testSearch("application", true);
   testSearch("ape", true);
 
-  std::cout << "\nTesting words that should NOT be found:\n";
+  std::cout
+      << "\nTesting words that should NOT be found:\n"; // el kalemat el mafeesh
   testSearch("xyz", false);
   testSearch("testing", false); // not inserted in this test
   testSearch("te", false);      // not inserted in this test
@@ -131,7 +137,7 @@ int main() {
   std::cout << "\nTest 5: Testing Deletion Operation\n";
   std::cout << "===================================\n\n";
 
-  // helpr lambda to run a delte test
+  // helper lambda lel delete test - b te-check el mas7 w el search ba3daha
   auto testDelete = [&](const char *word, bool expectedDelete,
                         bool expectedSearchAfter) {
     bool deleteResult = tree.deleteWord(word);
@@ -151,27 +157,28 @@ int main() {
     }
   };
 
-  // Note: Delete operation has limitations with empty root structure
+  // Note ya gama3a : Delete operation has limitations with empty root structure
   // Testing with simpler cases
   std::cout << "Deleting non-existing words:\n";
   testDelete("xyz", false, false);     // word never existed
   testDelete("testing", false, false); // was never inserted
-  testDelete("banana", false, false);  // completely different word
+  testDelete("banana", false, false);  // complety different word
 
-  std::cout << "\nVerifying all words still exist:\n";
-  testSearch("test", true);   // test should still exist
+  std::cout << "\nVerifying all words still exist:\n"; // n-check en el kalemat
+                                                       // lessa mawgooda
+  testSearch("test", true);   // test lazem teb2a mawgooda
   testSearch("tester", true); // tester should still exist
   testSearch("slow", true);   // slow should still exist
-  testSearch("slowly", true); // slowly should still exist
+  testSearch("slowly", true); // slowly shoudl still exist
   testSearch("apple", true);  // apple should still exist
 
   // HELLO THIS IS MADE IN ROMANIA
-  // Enhanced: Test 6 now includes pass/fail tracking for autocomplete tests
-  //-----------------------J
+  // Test 6: Autocomplete - el ektmal el tol2a2y
+  // b ye-print kol el suggestions lel prefix el mo3ayan
   std::cout << "\nTest 6: Testing Autocomplete (Direct Printing)\n";
   std::cout << "===============================================\n\n";
 
-  // Insert some related words to test autocomplete specifically
+  // Insert kalemat gedeed lel autocomplete test
   tree.insert("car");
   tree.insert("cart");
   tree.insert("carpet");
