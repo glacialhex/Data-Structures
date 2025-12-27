@@ -184,5 +184,143 @@ int main() {
 
 	return failed; //retrun number of failures (0 = sucess)
 }
+//NOURRRRRRRRRR
+#include "RadixTree.h"
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int passed = 0;
+int failed = 0;
+
+// ---------- Helper ----------
+void runTest(const string& name, bool condition) {
+    if (condition) {
+        cout << "[PASS] " << name << endl;
+        passed++;
+    }
+    else {
+        cout << "[FAIL] " << name << endl;
+        failed++;
+    }
+}
+
+// ---------- Tests ----------
+void testEmptyTree() {
+    RadixTree t;
+    runTest("Empty tree initially", t.empty() == true);
+}
+
+void testInsertAndSearch() {
+    RadixTree t;
+    t.insert("cat");
+    t.insert("car");
+    t.insert("dog");
+
+    runTest("Search existing word (cat)", t.search("cat") == true);
+    runTest("Search existing word (car)", t.search("car") == true);
+    runTest("Search existing word (dog)", t.search("dog") == true);
+    runTest("Search non-existing word (cow)", t.search("cow") == false);
+}
+
+void testPrefixNotWord() {
+    RadixTree t;
+    t.insert("apple");
+
+    runTest("Prefix only (app) is not a word", t.search("app") == false);
+}
+
+void testDuplicateInsertFrequency() {
+    RadixTree t;
+    t.insert("hello");
+    t.insert("hello");
+
+    runTest("Duplicate insert still searchable", t.search("hello") == true);
+}
+
+void testDeleteLeafWord() {
+    RadixTree t;
+    t.insert("cat");
+    t.insert("car");
+
+    bool deleted = t.deleteWord("cat");
+
+    runTest("Delete existing word", deleted == true);
+    runTest("Deleted word not found", t.search("cat") == false);
+    runTest("Other word still exists", t.search("car") == true);
+}
+
+void testDeleteNonExisting() {
+    RadixTree t;
+    t.insert("tree");
+
+    runTest("Delete non-existing word", t.deleteWord("trie") == false);
+}
+
+void testAutoCompleteUnique() {
+    RadixTree t;
+    t.insert("computer");
+    t.insert("compute");
+
+    string result = t.autoComplete("compu");
+    runTest("Autocomplete unique path", result == "compute");
+}
+
+void testAutoCompleteAmbiguous() {
+    RadixTree t;
+    t.insert("car");
+    t.insert("cart");
+    t.insert("carbon");
+
+    string result = t.autoComplete("car");
+    runTest("Autocomplete ambiguous returns empty", result == "");
+}
+
+void testAutoCompleteExactWord() {
+    RadixTree t;
+    t.insert("dog");
+
+    string result = t.autoComplete("dog");
+    runTest("Autocomplete exact word", result == "dog");
+}
+
+void testAutoSuggestCall() {
+    RadixTree t;
+    t.insert("cat");
+    t.insert("car");
+    t.insert("cart");
+
+    cout << "\nAutoSuggest output (manual check):" << endl;
+    t.autoSuggest("ca");  // Just ensure it runs
+
+    runTest("AutoSuggest executed without crash", true);
+}
+
+// ---------- MAIN ----------
+int main() {
+
+    cout << "==== RadixTree Test Suite ====\n" << endl;
+
+    testEmptyTree();
+    testInsertAndSearch();
+    testPrefixNotWord();
+    testDuplicateInsertFrequency();
+    testDeleteLeafWord();
+    testDeleteNonExisting();
+    testAutoCompleteUnique();
+    testAutoCompleteAmbiguous();
+    testAutoCompleteExactWord();
+    testAutoSuggestCall();
+
+    cout << "\n=============================" << endl;
+    cout << "Tests Passed: " << passed << endl;
+    cout << "Tests Failed: " << failed << endl;
+    cout << "Total Tests : " << passed + failed << endl;
+
+    return 0;
+}
+
 
 
