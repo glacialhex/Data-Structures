@@ -281,7 +281,7 @@ bool RadixTree::deleteRec(Node*& node, const char* word) {
     return false;
 }
 
-// ================= AUTOCOMPLETE =================
+// ================= AUTOSUGGEST =================
 
 void RadixTree::collectWords(Node* node, const char* prefix) {
     if (!node) return;
@@ -355,10 +355,10 @@ void RadixTree::autoSuggest(const char* prefix) {
     }
 
     // Collect and display all words with this prefix
-    collectWords(current, prefix);
+    collectWords(current, "");
 }
 
-string RadixTree::autoCompleteOne(const char* prefix) {
+string RadixTree::autoComplete(const char* prefix) {
     if (!myRoot || !prefix || *prefix == '\0') {
         return "";
     }
@@ -376,18 +376,19 @@ string RadixTree::autoCompleteOne(const char* prefix) {
         if (rootMatch == 0) {
             return ""; // Prefix doesn't match root
         }
-        
+
         // If the prefix ends before the root label ends, we stop traversal on current node
         if (rootMatch > prefixLen) {
             // This case handles a prefix like "ca" when root is "cat".
             // The prefix is fully matched, and we stop here.
             built = string(prefix);
             current = nullptr; // Stop traversal loop
-        } else {
+        }
+        else {
             // Prefix matches part of the root, advance pointers
             built += string(current->data);
             p += rootMatch;
-            
+
             // If the root label was shorter than the match, the search should fail, 
             // but the matchPrefix logic handles that by only returning the shorter length.
         }
@@ -403,18 +404,18 @@ string RadixTree::autoCompleteOne(const char* prefix) {
         while (ch) {
             if (ch->firstChar == *p) {
                 int matchLength = matchPrefix(ch->node->data, p);
-                
+
                 // Case: The child node's label does not fully contain the remaining prefix segment
                 if (matchLength < (int)strlen(ch->node->data) && matchLength < (int)strlen(p)) {
                     return ""; // Partial mismatch before the segment is consumed
                 }
-                
+
                 next = ch->node;
-                
+
                 // Append only the matched part of the child's data that completes the original prefix
                 built += string(p).substr(0, matchLength);
                 p += matchLength;
-                
+
                 break;
             }
             ch = ch->next;
@@ -425,7 +426,7 @@ string RadixTree::autoCompleteOne(const char* prefix) {
         }
         current = next;
     }
-    
+
     // Safety check: Ensure the constructed string exactly matches the input prefix length
     if (built.length() > prefixLen) {
         // This can happen if the last node segment was longer than the remaining prefix.
@@ -434,11 +435,12 @@ string RadixTree::autoCompleteOne(const char* prefix) {
     }
 
     // After finding the prefix node (or the boundary where the path ends):
-    
+
     // If the prefix itself is a full word, return it.
-    if (current && current->ended) {
+    if (current && current->ended && !current->children) {
         return built;
     }
+
 
     // 2. Descend to find the shortest, unambiguous completion
 
@@ -448,14 +450,19 @@ string RadixTree::autoCompleteOne(const char* prefix) {
         // **CRITICAL UNAMBIGUOUS CHECK:** // If the node has multiple children, we can't determine a single best completion.
         if (!ch) {
             // End of the line, no completion found
-            return ""; 
-        }
-        if (ch->next) {
-            // Ambiguous path (e.g., prefix "car" has children for "t" and "pet")
-            // Return nothing, or just the prefix, depending on desired behavior. 
-            // Standard autocomplete returns nothing if ambiguous.
             return "";
         }
+        // Check ambiguity only after prefix fully matched
+        int count = 0;
+        child* temp = ch;
+        while (temp) {
+            count++;
+            temp = temp->next;
+        }
+        if (count > 1) {
+            return "";
+        }
+
 
         // If the path is unambiguous (only one child), continue descending
         current = ch->node;
@@ -470,7 +477,6 @@ string RadixTree::autoCompleteOne(const char* prefix) {
     // Should only be reached if the prefix exists but leads to a dead end
     return "";
 }
-
 // =============== Timestamp & Frequency ===============
 
 long long RadixTree::getCurrentTimestamp() {
@@ -489,6 +495,7 @@ void RadixTree::incrementFrequency(const char* word) {
     if (!myRoot) return;
     search(word); // search updates frequency
 }
+
 
 
 
