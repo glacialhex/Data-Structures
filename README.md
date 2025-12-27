@@ -31,7 +31,7 @@ A high-performance autocomplete engine powered by an optimized **Radix Tree** (P
 | **macOS** | Xcode Command Line Tools, Homebrew, Qt6 |
 | **Windows** | Visual Studio 2019+, CMake, Qt6 |
 
-###  macOS
+### <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_logo_white.svg" width="20" height="20" /> macOS
 
 ```bash
 # 1. Install Qt6 via Homebrew
@@ -54,7 +54,7 @@ cmake --build .
 open Ahead.app
 ```
 
-### ⊞ Windows
+### <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg" width="20" height="20" /> Windows
 
 ```powershell
 # 1. Install Qt6 from https://www.qt.io/download
