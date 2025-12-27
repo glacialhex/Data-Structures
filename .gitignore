@@ -1,0 +1,41 @@
+# Build directories
+build/
+qt_gui/build/
+cmake-build-*/
+
+# Compiled binaries
+*.o
+*.obj
+*.exe
+*.app
+*.out
+
+# macOS
+.DS_Store
+*.dSYM/
+
+# Windows
+*.pdb
+*.ilk
+
+# IDE
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Qt
+*.moc
+*.qrc.cpp
+moc_*.cpp
+ui_*.h
+Makefile
+*_autogen/
+
+# Metadata files (keep these for persistence)
+# *.meta
+
+# Temporary files
+*.tmp
+*.swp
+*~
