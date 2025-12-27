@@ -38,7 +38,7 @@ A high-performance autocomplete engine powered by an optimized **Radix Tree** (P
 brew install qt@6
 
 # 2. Clone and build
-git clone https://github.com/YourUsername/Data-Structures.git
+git clone https://github.com/glacialhex/Data-Structures.git
 cd Data-Structures/qt_gui
 
 # 3. Create build directory
@@ -59,7 +59,7 @@ open Ahead.app
 ```powershell
 # 1. Install Qt6 from https://www.qt.io/download
 # 2. Clone repository
-git clone https://github.com/YourUsername/Data-Structures.git
+git clone https://github.com/glacialhex/Data-Structures.git
 cd Data-Structures\qt_gui
 
 # 3. Create build directory
@@ -139,9 +139,11 @@ Data-Structures/
 | 🏛️ **University of East London** | School of Architecture, Computing and Engineering |
 
 **Team Members:**
-- Marwan Khaled (221002058)
-- Nour Hesham (221001657)
-- Yousef Hesham (221001911)
+- Jana Tarek Nayel (24P0327)
+- Lujain Mohamed Helmi (24P0284)
+- Malak Mostafa Ali (24P0239)
+- Nour Mostafa Melegy (24P0176)
+- Yousef Mohamed Helmy (20P7954)
 
 ---
 
@@ -152,7 +154,7 @@ This project is licensed under the **MIT License**.
 ```
 MIT License
 
-Copyright (c) 2024 Ahead Team
+Copyright (c) 2025 Ahead Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
