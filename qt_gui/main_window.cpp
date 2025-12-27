@@ -223,6 +223,17 @@ void MainWindow::connectSignals() {
   connect(sideMenu, &SideMenu::saveFileRequested, this,
           &MainWindow::onSaveFile);
 
+  // Word selection from side menu - show in search and display suggestions
+  connect(sideMenu, &SideMenu::wordSelected, [this](const QString &word) {
+    searchBox->setText(word);
+    model->getAutocompletions(word);
+    statusBar()->setStyleSheet(
+        QString("QStatusBar { background-color: %1; color: %2; border-top: 1px "
+                "solid %3; padding: 5px; font-size: 12px; }")
+            .arg(Colors::BG_DARK, Colors::TEXT_SECONDARY, Colors::BORDER));
+    statusBar()->showMessage(QString("Viewing: %1").arg(word), 3000);
+  });
+
   // Model signals - REAL-TIME updates
   connect(model, &RadixTreeModel::suggestionsReady,
           [this](const QVector<RadixTreeModel::Suggestion> &suggestions) {

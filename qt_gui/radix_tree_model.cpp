@@ -150,7 +150,20 @@ void RadixTreeModel::saveMetadata(const QString &filePath) {
 
   QTextStream out(&file);
   // Save metadata format: word:frequency
-  // This is a simplified version
+  QVector<Suggestion> allSuggestions;
+  Node *root = tree->getRoot();
+  if (root) {
+    child *ch = root->children;
+    while (ch) {
+      QString word = QString::fromStdString(ch->node->data);
+      collectSuggestions(ch->node, word, allSuggestions);
+      ch = ch->next;
+    }
+  }
+
+  for (const auto &s : allSuggestions) {
+    out << s.word << ":" << s.frequency << "\n";
+  }
   file.close();
 }
 
@@ -160,7 +173,21 @@ void RadixTreeModel::loadMetadata(const QString &filePath) {
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     return;
 
-  // Load metadata
+  QTextStream in(&file);
+  while (!in.atEnd()) {
+    QString line = in.readLine().trimmed();
+    if (line.contains(':')) {
+      QStringList parts = line.split(':');
+      if (parts.size() >= 2) {
+        QString word = parts[0];
+        int freq = parts[1].toInt();
+        // Set frequency by re-inserting (freq-1) times
+        for (int i = 1; i < freq; ++i) {
+          tree->insert(word.toStdString().c_str());
+        }
+      }
+    }
+  }
   file.close();
 }
 
