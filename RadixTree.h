@@ -29,8 +29,10 @@ public:
     void collectWords(Node* node, const char* prefix);
     void getSuggest(const char* prefix);  
     // autoComplete //Jana
-   string autoCompleteOne(const char* prefix);//Jana
-
+    void getAutocompletions(const char* prefix);
+    void collectAllWords(Node* node, std::string currentString);
+    string autoCompleteOne(const char* prefix);
+    
 
     // extras  //yousef
     long long getCurrentTimestamp();  
@@ -40,6 +42,7 @@ public:
     // internal memory cleanup
     void destroy(Node* node);  //lujain
 };
+
 
 
 
