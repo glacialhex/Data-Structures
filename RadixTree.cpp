@@ -358,6 +358,8 @@ void RadixTree::autoSuggest(const char* prefix) {
     collectWords(current, "");
 }
 
+// ================= AUTOCOMPLETE =================
+
 string RadixTree::autoComplete(const char* prefix) {
     if (!myRoot || !prefix || *prefix == '\0') {
         return "";
@@ -495,6 +497,7 @@ void RadixTree::incrementFrequency(const char* word) {
     if (!myRoot) return;
     search(word); // search updates frequency
 }
+
 
 
 
