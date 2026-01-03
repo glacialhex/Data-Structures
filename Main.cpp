@@ -298,6 +298,82 @@ void testAutoSuggestCall() {
     runTest("AutoSuggest executed without crash", true);
 }
 
+
+// ================= AUTOCOMPLETE J =================
+
+// Helper: This function crawls down the tree finding every word
+void RadixTree::collectAllWords(Node* node, string currentString) {
+    if (node == nullptr) return;
+
+    // 1. Is the current path a real word? Print it.
+    if (node->ended) {
+        cout << "- " << currentString << endl;
+    }
+
+    // 2. Visit all children
+    child* currentChild = node->children;
+    while (currentChild != nullptr) {
+        // Build the new string: Old String + Child's Label
+        string newString = currentString + currentChild->node->data;
+
+        // Recursive call: Go deeper
+        collectAllWords(currentChild->node, newString);
+
+        // Move to next sibling
+        currentChild = currentChild->next;
+    }
+}
+
+void RadixTree::getAutocompletions(const char* prefix) {
+    cout << "Suggestions for '" << prefix << "':" << endl;
+
+    if (myRoot == nullptr) return;
+
+    Node* current = myRoot;
+    string pathBuiltSoFar = "";
+    int prefixIndex = 0;
+    int prefixLen = strlen(prefix);
+
+    if (current->data[0] != '\0') {
+        int match = matchPrefix(current->data, prefix);
+        pathBuiltSoFar += current->data;
+        prefixIndex += match;
+        
+        if (match == 0 && prefixLen > 0) {
+            cout << "(No results)" << endl;
+            return;
+        }
+    }
+
+    while (prefixIndex < prefixLen) {
+        child* ch = current->children;
+        Node* nextNode = nullptr;
+
+        while (ch != nullptr) {
+            if (ch->firstChar == prefix[prefixIndex]) {
+                nextNode = ch->node;
+                break;
+            }
+            ch = ch->next;
+        }
+
+        if (nextNode == nullptr) {
+            cout << "(No results)" << endl;
+            return;
+        }
+
+        pathBuiltSoFar += nextNode->data;
+        
+
+        int matchLen = matchPrefix(nextNode->data, prefix + prefixIndex);
+        prefixIndex += matchLen;
+        
+        current = nextNode;
+    }
+
+    collectAllWords(current, pathBuiltSoFar);
+}
+
 // ---------- MAIN ----------
 int main() {
 
@@ -312,6 +388,7 @@ int main() {
     testAutoCompleteUnique();
     testAutoCompleteAmbiguous();
     testAutoCompleteExactWord();
+	testMember2Autocomplete();
     testAutoSuggestCall();
 
     cout << "\n=============================" << endl;
@@ -321,6 +398,7 @@ int main() {
 
     return 0;
 }
+
 
 
 
