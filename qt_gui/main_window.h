@@ -37,7 +37,8 @@ private slots:
 private:
   void setupUI();
   void connectSignals();
-  void showRecentSearches();  // Show recent searches when search box empty
+  void
+  showRecentSearches(); // Show recent searches when the search box is empty
 
   RadixTreeModel *model;
   SideMenu *sideMenu;
@@ -52,8 +53,8 @@ private:
   RadixTreeModel::SortMode sortMode;
   QRadioButton *sortByFrequency;
   QRadioButton *sortByRecent;
-  
-  // Session-based recent searches
+
+  // Session-based recent searches (zy google)
   QStringList recentSearches;
   static const int MAX_RECENT_SEARCHES = 10;
 };

@@ -1,25 +1,24 @@
 ﻿/******************************************************************************
- *
- *        ___   _____ _   _  _____ _   _  _____
- *       / _ \ / ____| | | ||  ___| \ | |/ ____|
- *      | |_| | (___ | | | || |__ |  \| | |  __
- *      |  _  |\___ \| | | ||  __|| . ` | | |_ |
- *      | | | |____) | |_| || |___| |\  | |__| |
- *      |_| |_|_____/ \___/ |_____|_| \_|\_____|
- *
- *                    Faculty of Engineering
- *                     Ain Shams University
- *
- *
+ *                                                                            *
+ *        ___   _____ _   _  _____ _   _  _____                               *
+ *       / _ \ / ____| | | ||  ___| \ | |/ ____|                              *
+ *      | |_| | (___ | | | || |__ |  \| | |  __                               *
+ *      |  _  |\___ \| | | ||  __|| . ` | | |_ |                              *
+ *      | | | |____) | |_| || |___| |\  | |__| |                              *
+ *      |_| |_|_____/ \___/ |_____|_| \_|\_____|                              *
+ *                                                                            *
+ *                    Faculty of Engineering                                  *
+ *                     Ain Shams University                                   *
+ *                                                                            *
  ******************************************************************************
- *
- *  Copyright Ⓒ 2025 - Faculty of Engineering, Ain Shams University
- *  All Rights Reserved to the students and the university.
- *
- *  Project: Radix Tree Data Structure
- *  Course:  CSE243 - Data Structures & Algorithms
- *  Team:    Yousef, Nour, Malak, Jana, Lujain
- *
+ *                                                                            *
+ *  Copyright Ⓒ 2025 - Faculty of Engineering, Ain Shams University          *
+ *  All Rights Reserved to the students and the university.                   *
+ *                                                                            *
+ *  Project: Radix Tree Data Structure                                        *
+ *  Course:  CSE243 - Data Structures & Algorithms                            *
+ *  Team:    Yousef, Nour, Malak, Jana, Lujain                                *
+ *                                                                            *
  ******************************************************************************/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -39,12 +38,12 @@ RadixTree::RadixTree() { // Nour
   myRoot = new Node(""); // Root is always empty container
 }
 
-// Added: Proper memory cleanup in destructor
+// Proper memory cleanup in destructor
 RadixTree::~RadixTree() { // Lujain
   destroy(myRoot);
 }
 
-// Added: Recursive memory cleanup function
+// Recursive memory cleanup function
 void RadixTree::destroy(Node *node) { // Lujain
   if (!node)
     return;
