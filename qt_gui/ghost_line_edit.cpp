@@ -50,7 +50,7 @@ void GhostLineEdit::paintEvent(QPaintEvent *event) {
     initStyleOption(&option);
     QRect textRect =
         style()->subElementRect(QStyle::SE_LineEditContents, &option, this);
-    // textRect.adjust(25, 0, 0, 0); // Removed double padding adjustment
+    // textRect.adjust(25, 0, 0, 0); // testtttt
 
     QFontMetrics fm(font());
     int textWidth = fm.horizontalAdvance(text());
