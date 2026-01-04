@@ -46,10 +46,6 @@ public:
                   char edgeChar);       // merge el nodes el single-child
   void updateWordFrequency(Node *node); // update el frequency
 
-  // New Helper for optimization
-  void splitNode(Node *parent, child *ch,
-                 int matchedLen); // split node lel iteraitve insert
-
   // Memory Management - el memory cleanup
   void destroy(Node *node); // delete kol el nodes recursively
 

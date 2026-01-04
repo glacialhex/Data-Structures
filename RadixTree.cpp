@@ -88,27 +88,6 @@ void RadixTree::addchild(Node *parent, Node *childnode) { // Malak
   parent->children = newchild; // parent children pointer updated lel new child
 }
 
-// Helper to split a node when partial match occurs
-void RadixTree::splitNode(Node *parent, child *ch, int matchedLen) {
-  Node *current = ch->node;
-  // create new node holding the remaining suffix of current node
-  Node *newChild = new Node(current->data + matchedLen);
-
-  // copy properties to new suffix node
-  newChild->ended = current->ended;
-  newChild->frequency = current->frequency;
-  newChild->timestamp = current->timestamp;
-  newChild->children = current->children; // Suffix takes the children
-
-  // Update current node to be the prefix
-  current->data[matchedLen] = '\0'; // Truncate data
-  current->ended = false;           // Prefix is not an end (usually)
-  current->children = nullptr;      // Children moved to suffix
-
-  // Add suffix as child of current
-  addchild(current, newChild);
-}
-
 // ================ INSERT (OPTIMIZED) ================
 // el insert ba2a iterative w generic (infinite depth support)
 
