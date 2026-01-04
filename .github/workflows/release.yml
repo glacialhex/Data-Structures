@@ -1,0 +1,106 @@
+name: Release Ahead
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Qt6
+      run: brew install qt@6
+    
+    - name: Configure & Build
+      run: |
+        cd qt_gui
+        mkdir -p build && cd build
+        cmake .. -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
+        cmake --build .
+    
+    - name: Create macOS DMG
+      run: |
+        cd qt_gui/build
+        mkdir -p dmg_contents
+        cp -R Ahead.app dmg_contents/
+        hdiutil create -volname "Ahead" -srcfolder dmg_contents -ov -format UDZO Ahead-macOS.dmg
+    
+    - name: Upload macOS DMG
+      uses: actions/upload-artifact@v4
+      with:
+        name: Ahead-macOS
+        path: qt_gui/build/Ahead-macOS.dmg
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Qt6
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.7.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        cache: true
+    
+    - name: Configure & Build
+      run: |
+        cd qt_gui
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+        cmake --build . --config Release
+    
+    - name: Deploy Qt & Create ZIP
+      run: |
+        cd qt_gui/build/Release
+        & "$env:QT_ROOT_DIR/bin/windeployqt.exe" Ahead.exe
+        Compress-Archive -Path * -DestinationPath ../Ahead-Windows.zip
+    
+    - name: Upload Windows ZIP
+      uses: actions/upload-artifact@v4
+      with:
+        name: Ahead-Windows
+        path: qt_gui/build/Ahead-Windows.zip
+
+  create-release:
+    needs: [build-macos, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Download macOS artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Ahead-macOS
+        path: ./artifacts
+    
+    - name: Download Windows artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: Ahead-Windows
+        path: ./artifacts
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Ahead ${{ github.ref_name }}
+        body: |
+          ## Ahead ${{ github.ref_name }}
+          
+          ### Downloads
+          - **Windows**: `Ahead-Windows.zip` - Extract and run `Ahead.exe`
+          - **macOS**: `Ahead-macOS.dmg` - Open and drag to Applications
+          
+          ### What's New
+          See commit history for changes.
+        files: |
+          ./artifacts/Ahead-Windows.zip
+          ./artifacts/Ahead-macOS.dmg
+        draft: false
+        prerelease: false
