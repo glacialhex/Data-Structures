@@ -62,6 +62,7 @@ RadixTreeModel::getAutocompletions(const QString &prefix) {
     }
 
     if (!found) {
+      emit suggestionsReady(results); // Clear ghost text
       return results;
     }
 
@@ -75,6 +76,7 @@ RadixTreeModel::getAutocompletions(const QString &prefix) {
     }
 
     if (keyIndex + matched < keyLen && matched < nodeLen) {
+      emit suggestionsReady(results); // Clear ghost text
       return results;
     }
 
