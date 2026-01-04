@@ -113,62 +113,101 @@ void RadixTree::splitNode(Node *parent, child *ch, int matchedLen) {
 // el insert ba2a iterative w generic (infinite depth support)
 
 void RadixTree::insert(const char *word) {
-  Node *current = myRoot;
-  int keyLen = strlen(word);
-  int keyIndex = 0;
+  // Case 1: Empty tree - insert first word directly
+  if (empty()) {
+    Node *newNode = new Node(word);
+    newNode->ended = true;
+    newNode->frequency = 1;
+    newNode->timestamp = getCurrentTimestamp();
+    addchild(myRoot, newNode);
+    return;
+  }
 
-  while (keyIndex < keyLen) {
-    char edgeChar = word[keyIndex];
-    child *ch = current->children;
-    child *found = nullptr;
+  Node *currentNode = myRoot;
+  const char *remaining = word;
 
-    // 1. Find edge matching the character
-    while (ch != nullptr) {
-      if (ch->firstChar == edgeChar) {
-        found = ch;
+  while (true) {
+    // Look for child with matching first character
+    child *ch = currentNode->children;
+    Node *nextNode = nullptr;
+
+    while (ch) {
+      if (ch->firstChar == *remaining) {
+        nextNode = ch->node;
         break;
       }
       ch = ch->next;
     }
 
-    // Case A: No edge found - create new child
-    if (!found) {
-      Node *newNode = new Node(word + keyIndex);
+    // Case 2: No matching child - add as new child
+    if (!nextNode) {
+      Node *newNode = new Node(remaining);
       newNode->ended = true;
       newNode->frequency = 1;
       newNode->timestamp = getCurrentTimestamp();
-      addchild(current, newNode);
+      addchild(currentNode, newNode);
       return;
     }
 
-    // Case B: Edge found - match prefix
-    int matched = matchPrefix(found->node->data, word + keyIndex);
-    int nodeLen = strlen(found->node->data);
+    // Found matching child - check prefix match
+    int prefix = SearchPrefix(remaining, nextNode);
+    int nodeLen = strlen(nextNode->data);
+    int remainingLen = strlen(remaining);
 
-    // Case B1: Partial Match (Split Node) - el kelma mo5talefa 3n el node
-    if (matched < nodeLen) {
-      splitNode(current, found, matched);
-      // Now found->node is the prefix. We continue validation.
-    }
+    // Case 3: Need to split current node (partial match)
+    if (prefix < nodeLen) {
+      // Create suffix node with remaining data from matched node
+      Node *suffixNode = new Node(nextNode->data + prefix);
+      suffixNode->ended = nextNode->ended;
+      suffixNode->frequency = nextNode->frequency;
+      suffixNode->timestamp = nextNode->timestamp;
+      suffixNode->children = nextNode->children;
 
-    // Update keyIndex by matched length
-    keyIndex += matched;
+      // Truncate current node data (proper memory management)
+      char *newData = new char[prefix + 1];
+      strncpy(newData, nextNode->data, prefix);
+      newData[prefix] = '\0';
+      delete[] nextNode->data;
+      nextNode->data = newData;
 
-    // Case B2: Partial Key Match (New Branch needed)
-    // If we split, we might still have key chars remaining
-    if (keyIndex < keyLen) {
-      // If we split above, found->node is now the prefix (len == matched)
-      // If we didn't split (matched == nodeLen), we traverse down
-      current = found->node;
-      // Loop continues to find next edge or add new child
-    } else {
-      // Case B3: Key Fully Consumed (Word Ends Here)
-      // Mark found node as ended
-      found->node->ended = true;
-      found->node->frequency++;
-      found->node->timestamp = getCurrentTimestamp();
+      nextNode->ended = false;
+      nextNode->frequency = 0;
+      nextNode->children = nullptr;
+
+      // Add suffix as child
+      addchild(nextNode, suffixNode);
+
+      // If word ends exactly at split point
+      if (remaining[prefix] == '\0') {
+        nextNode->ended = true;
+        nextNode->frequency = 1;
+        nextNode->timestamp = getCurrentTimestamp();
+        return;
+      }
+
+      // Create node for remaining part of new word
+      Node *newWordNode = new Node(remaining + prefix);
+      newWordNode->ended = true;
+      newWordNode->frequency = 1;
+      newWordNode->timestamp = getCurrentTimestamp();
+      addchild(nextNode, newWordNode);
       return;
     }
+
+    // Move past matched prefix
+    remaining += prefix;
+    remainingLen = strlen(remaining);
+
+    // Case 4: Exact match at current node
+    if (remainingLen == 0) {
+      nextNode->ended = true;
+      nextNode->frequency++;
+      nextNode->timestamp = getCurrentTimestamp();
+      return;
+    }
+
+    // Case 5: Continue with matching child
+    currentNode = nextNode;
   }
 }
 
@@ -390,7 +429,6 @@ void RadixTree::updateWordFrequency(Node *node) { // Yousef
     node->timestamp = getCurrentTimestamp();
   }
 }
-
 
 void RadixTree::writeWordsToFile(Node *node, string currentString,
                                  ofstream &file) {
