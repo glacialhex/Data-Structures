@@ -86,7 +86,7 @@ void RadixTree::addchild(Node *parent, Node *childnode) { // Malak
   parent->children = newchild; // parent children pointer updated lel new child
 }
 
-// ================ INSERT (OPTIMIZED) ================
+// ================ INSERT (Cleaned) ================
 // el insert ba2a iterative w generic (infinite depth support)
 
 void RadixTree::insert(const char *word) {
@@ -188,7 +188,7 @@ void RadixTree::insert(const char *word) {
   }
 }
 
-// ================ SEARCH (Optimzied ================
+// ================ SEARCH (Cleaned ================
 
 bool RadixTree::search(const char *key) {
   if (empty())
@@ -242,7 +242,7 @@ bool RadixTree::search(const char *key) {
 
 Node *RadixTree::traverseEdge(Node *node, const char *keySegment,
                               int &matchedLen) {
-  // Legacy helper kept for compatibility if needed, but unused in new search
+  // Legacy helper kept for compatibility if needed bsh msh used
   child *ch = node->children;
   while (ch) {
     if (ch->firstChar == keySegment[0]) {
@@ -262,31 +262,29 @@ void RadixTree::handleSearchFailure(const char *reason) {
   // cout << "Search failed: " << reason << endl; // Silent for optimization
 }
 
-// ================ AUTOCOMPLETE (OPTIMIZED) ================
+// ================ AUTOCOMPLETE (Cleaned) ================
 
-// Helper function - bygama3 el kalemat recursively fel vector
-void RadixTree::collectSuggestionsVec(Node *node,
-                                      const std::string &currentWord,
-                                      std::vector<Suggestion> &results) {
+// Helper function - bygama3 el kalemat recursively fel linked list
+void RadixTree::collectSuggestions(Node *node, const std::string &currentWord,
+                                   SuggestionList *results) {
   if (!node)
     return;
 
   if (node->ended) {
-    results.push_back({currentWord, node->frequency, node->timestamp});
+    results->append(currentWord, node->frequency, node->timestamp);
   }
 
   child *ch = node->children;
   while (ch) {
     std::string nextWord = currentWord + ch->node->data;
-    collectSuggestionsVec(ch->node, nextWord, results);
+    collectSuggestions(ch->node, nextWord, results);
     ch = ch->next;
   }
 }
 
-// getSuggestions - byrag3 vector lel GUI - el autocomplete el asasi
-std::vector<RadixTree::Suggestion>
-RadixTree::getSuggestions(const char *prefix) {
-  std::vector<Suggestion> results;
+// getSuggestions - byrag3 linked list lel GUI - el autocomplete el asasi
+SuggestionList *RadixTree::getSuggestions(const char *prefix) {
+  SuggestionList *results = new SuggestionList();
 
   if (empty() || prefix == nullptr || prefix[0] == '\0') {
     return results;
@@ -332,7 +330,7 @@ RadixTree::getSuggestions(const char *prefix) {
   }
 
   // gama3 kol el kalemat men hena
-  collectSuggestionsVec(current, builtString, results);
+  collectSuggestions(current, builtString, results);
   return results;
 }
 
@@ -343,24 +341,28 @@ void RadixTree::autoSuggest(const char *prefix) {
     return;
   }
 
-  std::vector<Suggestion> suggestions = getSuggestions(prefix);
+  SuggestionList *suggestions = getSuggestions(prefix);
 
-  if (suggestions.empty()) {
+  if (suggestions->isEmpty()) {
     cout << "No suggestions found for the given prefix." << endl;
+    delete suggestions;
     return;
   }
 
-  for (const auto &s : suggestions) {
-    cout << s.word << endl;
+  SuggestionNode *curr = suggestions->head;
+  while (curr) {
+    cout << curr->word << endl;
+    curr = curr->next;
   }
+  delete suggestions;
 }
 
 // Wrapper for compatibility
 void RadixTree::getAutocompletions(const char *prefix) { autoSuggest(prefix); }
 
 // getAllSuggestions - byrag3 kol el kalemat fel tree
-std::vector<RadixTree::Suggestion> RadixTree::getAllSuggestions() {
-  std::vector<Suggestion> results;
+SuggestionList *RadixTree::getAllSuggestions() {
+  SuggestionList *results = new SuggestionList();
   if (empty())
     return results;
 
@@ -368,7 +370,7 @@ std::vector<RadixTree::Suggestion> RadixTree::getAllSuggestions() {
   child *ch = myRoot->children;
   while (ch) {
     std::string word = ch->node->data;
-    collectSuggestionsVec(ch->node, word, results);
+    collectSuggestions(ch->node, word, results);
     ch = ch->next;
   }
   return results;

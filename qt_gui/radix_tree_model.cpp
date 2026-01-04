@@ -45,13 +45,17 @@ RadixTreeModel::getAutocompletions(const QString &prefix) {
   }
 
   // na2el el call lel RadixTree getSuggestions
-  std::vector<RadixTree::Suggestion> treeSuggestions =
+  SuggestionList *treeSuggestions =
       tree->getSuggestions(prefix.toStdString().c_str());
 
   // 7awel le Qt types
-  for (const auto &s : treeSuggestions) {
-    results.append({QString::fromStdString(s.word), s.frequency, s.timestamp});
+  SuggestionNode *curr = treeSuggestions->head;
+  while (curr) {
+    results.append(
+        {QString::fromStdString(curr->word), curr->frequency, curr->timestamp});
+    curr = curr->next;
   }
+  delete treeSuggestions;
 
   std::sort(results.begin(), results.end());
   emit suggestionsReady(results);
@@ -101,11 +105,14 @@ void RadixTreeModel::saveMetadata(const QString &filePath) {
 
   QTextStream out(&file);
   // besta5dem getAllSuggestions men el RadixTree
-  std::vector<RadixTree::Suggestion> allSuggestions = tree->getAllSuggestions();
+  SuggestionList *allSuggestions = tree->getAllSuggestions();
 
-  for (const auto &s : allSuggestions) {
-    out << QString::fromStdString(s.word) << ":" << s.frequency << "\n";
+  SuggestionNode *curr = allSuggestions->head;
+  while (curr) {
+    out << QString::fromStdString(curr->word) << ":" << curr->frequency << "\n";
+    curr = curr->next;
   }
+  delete allSuggestions;
   file.close();
 }
 
@@ -137,11 +144,14 @@ QStringList RadixTreeModel::getAllWords() {
   QStringList words;
 
   // besta5dem getAllSuggestions men el RadixTree
-  std::vector<RadixTree::Suggestion> suggestions = tree->getAllSuggestions();
+  SuggestionList *suggestions = tree->getAllSuggestions();
 
-  for (const auto &s : suggestions) {
-    words.append(QString::fromStdString(s.word));
+  SuggestionNode *curr = suggestions->head;
+  while (curr) {
+    words.append(QString::fromStdString(curr->word));
+    curr = curr->next;
   }
+  delete suggestions;
   return words;
 }
 

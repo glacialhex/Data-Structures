@@ -1,10 +1,53 @@
 #pragma once
 #include "Node.h"
 #include <string>
-#include <vector>
 
 // RadixTree.h - el class definition lel RadixTree data structure
 // RadixTree = compressed trie - as7al lel autocomplete w prefix search
+
+// SuggestionNode - linked list node lel suggestions (badal vector)
+struct SuggestionNode {
+  std::string word;
+  int frequency;
+  long long timestamp;
+  SuggestionNode *next;
+
+  SuggestionNode(const std::string &w, int f, long long t)
+      : word(w), frequency(f), timestamp(t), next(nullptr) {}
+};
+
+// SuggestionList - linked list lel suggestions (badal vector)
+struct SuggestionList {
+  SuggestionNode *head;
+  SuggestionNode *tail;
+  int count;
+
+  SuggestionList() : head(nullptr), tail(nullptr), count(0) {}
+
+  ~SuggestionList() {
+    SuggestionNode *curr = head;
+    while (curr) {
+      SuggestionNode *next = curr->next;
+      delete curr;
+      curr = next;
+    }
+  }
+
+  // add suggestion lel end
+  void append(const std::string &word, int frequency, long long timestamp) {
+    SuggestionNode *newNode = new SuggestionNode(word, frequency, timestamp);
+    if (!head) {
+      head = tail = newNode;
+    } else {
+      tail->next = newNode;
+      tail = newNode;
+    }
+    count++;
+  }
+
+  bool isEmpty() const { return head == nullptr; }
+  int size() const { return count; }
+};
 
 class RadixTree {
 public:
@@ -25,22 +68,16 @@ public:
   bool deleteRec(Node *&current, const char *word); // recursive delete
 
   // Autocomplete - el ektmal el telqa2y
-  struct Suggestion {
-    std::string word;
-    int frequency;
-    long long timestamp;
-  };
-  std::vector<Suggestion>
-  getSuggestions(const char *prefix);          // geb el suggestions lel GUI
-  std::vector<Suggestion> getAllSuggestions(); // geb kol el kalemat fel tree
+  SuggestionList *
+  getSuggestions(const char *prefix);  // geb el suggestions lel GUI
+  SuggestionList *getAllSuggestions(); // geb kol el kalemat fel tree
   void
   getAutocompletions(const char *prefix); // geb kol el suggestions (console)
   void autoSuggest(const char *prefix);   // el autocomplete el gdeed
 
 private:
-  void
-  collectSuggestionsVec(Node *node, const std::string &currentWord,
-                        std::vector<Suggestion> &results); // bygama3 fel vector
+  void collectSuggestions(Node *node, const std::string &currentWord,
+                          SuggestionList *results); // bygama3 fel list
 
 public:
   // Search / Lookup - el dawreyya
