@@ -37,36 +37,34 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install Qt6 (MinGW)
-      uses: jurplel/install-qt-action@v3
+    - name: Install Qt6
+      uses: jurplel/install-qt-action@v4
       with:
-        version: '6.6.0'
+        version: '6.7.0'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_mingw'
+        arch: 'win64_msvc2019_64'
+        cache: true
     
-    - name: Configure CMake (MinGW)
-      shell: cmd
+    - name: Configure CMake
       run: |
         cd qt_gui
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="%Qt6_DIR%"
+        cmake .. -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
     
-    - name: Build (MinGW)
-      shell: cmd
+    - name: Build
       run: |
         cd qt_gui/build
-        mingw32-make
+        cmake --build . --config Release
     
     - name: Deploy Qt
-      shell: cmd
       run: |
-        cd qt_gui/build
-        windeployqt.exe Ahead.exe
+        cd qt_gui/build/Release
+        & "$env:QT_ROOT_DIR/bin/windeployqt.exe" Ahead.exe
     
     - name: Upload Windows Executable
       uses: actions/upload-artifact@v4
       with:
         name: Ahead-Windows
-        path: qt_gui/build/
+        path: qt_gui/build/Release/
