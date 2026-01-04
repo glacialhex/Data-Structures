@@ -74,8 +74,7 @@ int RadixTree::matchPrefix(const char *nodePrefix,
 }
 
 int RadixTree::SearchPrefix(const char *word, Node *currentNode) { // Nour
-  // Used by matchPrefix but kept for legacy API compatibility if needed
-  // internally
+  // mosta5dam fel matchPrefix - ma7toot lel legacy compatibility
   return matchPrefix(word, currentNode->data);
 }
 
@@ -189,7 +188,7 @@ void RadixTree::insert(const char *word) {
   }
 }
 
-// ================ SEARCH (OPTIMIZED) ================
+// ================ SEARCH (Optimzied ================
 
 bool RadixTree::search(const char *key) {
   if (empty())
@@ -204,10 +203,12 @@ bool RadixTree::search(const char *key) {
     child *ch = current->children;
     child *found = nullptr;
 
-    while (ch) {
-      if (ch->firstChar == edgeChar) {
+    while (ch) { // loop el child searching
+      if (ch->firstChar ==
+          edgeChar) { // firChar m3molaha cache f struct child for efficiency
+                      // and avoid defereincing repeatedly
         found = ch;
-        break;
+        break; // found fa stip searching
       }
       ch = ch->next;
     }
@@ -218,10 +219,12 @@ bool RadixTree::search(const char *key) {
     }
 
     int matched = matchPrefix(found->node->data, key + keyIndex);
-    int nodeLen = strlen(found->node->data);
+    int nodeLen =
+        strlen(found->node->data); // check how many nodes found between node
+                                   // data and remaining key
 
     // Strict Search: Mismatch if we don't match the FULL node label
-    // Lazem n-match el node label kolaha exact
+    // Lazem n-match el node label kolaha tb2a exact
     if (matched < nodeLen) {
       handleSearchFailure("Key ended mid-edge or mismatch");
       return false;
@@ -261,47 +264,46 @@ void RadixTree::handleSearchFailure(const char *reason) {
 
 // ================ AUTOCOMPLETE (OPTIMIZED) ================
 
-// Helper function - collects all words recursively
-void RadixTree::collectWords(Node *node, const std::string &prefix) {
+// Helper function - bygama3 el kalemat recursively fel vector
+void RadixTree::collectSuggestionsVec(Node *node,
+                                      const std::string &currentWord,
+                                      std::vector<Suggestion> &results) {
   if (!node)
     return;
 
-  std::string newPrefix = prefix + node->data; // Safe string concatenation
-
   if (node->ended) {
-    cout << newPrefix << endl;
+    results.push_back({currentWord, node->frequency, node->timestamp});
   }
 
   child *ch = node->children;
   while (ch) {
-    collectWords(ch->node, newPrefix);
+    std::string nextWord = currentWord + ch->node->data;
+    collectSuggestionsVec(ch->node, nextWord, results);
     ch = ch->next;
   }
 }
 
-// Kept for API compatibility - calls collectWords
-void RadixTree::collectAllWords(Node *node, string currentString) {
-  collectWords(node, currentString);
-}
+// getSuggestions - byrag3 vector lel GUI - el autocomplete el asasi
+std::vector<RadixTree::Suggestion>
+RadixTree::getSuggestions(const char *prefix) {
+  std::vector<Suggestion> results;
 
-// Main autoSuggest function - el autocomplete
-void RadixTree::autoSuggest(const char *prefix) {
-  if (empty()) {
-    cout << "Tree is empty. No suggestions available." << endl;
-    return;
+  if (empty() || prefix == nullptr || prefix[0] == '\0') {
+    return results;
   }
 
-  Node *current = myRoot; // Sentinel root (always empty data)
-  int index = 0;
+  Node *current = myRoot;
+  std::string builtString = "";
   int prefixLength = strlen(prefix);
+  int index = 0;
 
-  // Traverse through children to match the entire prefix
+  // nam4y 3al children 3a4an yela2y el prefix
   while (index < prefixLength) {
     child *ch = current->children;
     Node *nextNode = nullptr;
     int matchedLen = 0;
 
-    // Find child with matching first character
+    // dawer 3al child ely first char byetabe2
     while (ch) {
       if (ch->firstChar == prefix[index]) {
         nextNode = ch->node;
@@ -313,21 +315,64 @@ void RadixTree::autoSuggest(const char *prefix) {
       ch = ch->next;
     }
 
+    // mafe4 match - raga3 fadya
     if (nextNode == nullptr || matchedLen == 0) {
-      cout << "No suggestions found for the given prefix." << endl;
-      return;
+      return results;
     }
 
-    index += matchedLen;
+    // check lw el prefix mesh kamel 3al edge
+    int nodeLen = strlen(nextNode->data);
+    if (index + matchedLen < prefixLength && matchedLen < nodeLen) {
+      return results; // el prefix ma5ale4 3al edge
+    }
+
+    builtString += nextNode->data;
     current = nextNode;
+    index += matchedLen;
   }
 
-  // Collect and display all words with this prefix
-  collectWords(current, "");
+  // gama3 kol el kalemat men hena
+  collectSuggestionsVec(current, builtString, results);
+  return results;
 }
 
-// Wrapper for GUI compatibility - el wrapper lel Qt GUI
+// autoSuggest - el autocomplete lel console (bytba3)
+void RadixTree::autoSuggest(const char *prefix) {
+  if (empty()) {
+    cout << "Tree is empty. No suggestions available." << endl;
+    return;
+  }
+
+  std::vector<Suggestion> suggestions = getSuggestions(prefix);
+
+  if (suggestions.empty()) {
+    cout << "No suggestions found for the given prefix." << endl;
+    return;
+  }
+
+  for (const auto &s : suggestions) {
+    cout << s.word << endl;
+  }
+}
+
+// Wrapper for compatibility
 void RadixTree::getAutocompletions(const char *prefix) { autoSuggest(prefix); }
+
+// getAllSuggestions - byrag3 kol el kalemat fel tree
+std::vector<RadixTree::Suggestion> RadixTree::getAllSuggestions() {
+  std::vector<Suggestion> results;
+  if (empty())
+    return results;
+
+  // gama3 men kol el children bto3 el root
+  child *ch = myRoot->children;
+  while (ch) {
+    std::string word = ch->node->data;
+    collectSuggestionsVec(ch->node, word, results);
+    ch = ch->next;
+  }
+  return results;
+}
 
 // ================ DELETION ================
 // Updated to handle sentinel root
@@ -335,30 +380,14 @@ void RadixTree::getAutocompletions(const char *prefix) { autoSuggest(prefix); }
 bool RadixTree::deleteWord(const char *word) { return deleteRec(myRoot, word); }
 
 bool RadixTree::deleteRec(Node *&current, const char *word) {
-  // If current is sentinel (root), finding child logic is slightly different
-  // Actually Logic:
-  // Recursively find the node.
-  // Unmark ended.
-  // If leaf -> delete (return true).
 
-  // Simplification: We traverse down.
-  // Since delete is complex with merging, keeping it simple for now.
-  // Just unmarking is safe.
-
-  // For now, let's just use Search logic to find and unmark,
-  // and basic pruning if leaf.
-
-  // Re-using search logic implies iteration.
-  // But modification requires reference updates.
-
-  // Let's implement a clean recursive delete that works with sentinel.
-
-  if (*word == '\0') {
-    if (current->ended) {
-      current->ended = false;
-      return current->children == nullptr; // Return true if leaf now
+  if (*word == '\0') {        // whole word is consumed
+    if (current->ended) {     // this is the word
+      current->ended = false; // unmark the word-no longer valid
+      return current->children ==
+             nullptr; // if no children= leaf, if children= keep
     }
-    return false;
+    return false; // reached the end bu word not found
   }
 
   child *ch = current->children;

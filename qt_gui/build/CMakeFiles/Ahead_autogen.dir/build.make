@@ -72,7 +72,7 @@ Ahead_autogen/timestamp: /opt/homebrew/opt/qt/share/qt/libexec/moc
 Ahead_autogen/timestamp: /opt/homebrew/opt/qt/share/qt/libexec/uic
 Ahead_autogen/timestamp: CMakeFiles/Ahead_autogen.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Ahead"
-	/opt/homebrew/bin/cmake -E cmake_autogen /Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir/AutogenInfo.json ""
+	/opt/homebrew/bin/cmake -E cmake_autogen /Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir/AutogenInfo.json Release
 	/opt/homebrew/bin/cmake -E touch /Users/yousef/Antigravity/Data-Structures/qt_gui/build/Ahead_autogen/timestamp
 
 CMakeFiles/Ahead_autogen.dir/codegen:

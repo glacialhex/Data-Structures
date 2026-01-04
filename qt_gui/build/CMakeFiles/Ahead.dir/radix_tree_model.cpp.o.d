@@ -664,111 +664,26 @@ CMakeFiles/Ahead.dir/radix_tree_model.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/pstl.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/sample.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/bit \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/QObject \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qobject.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qobjectdefs.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qnamespace.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qglobal.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/assert.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_assert.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_static_assert.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stdbool.h \
-  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdbool.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtcoreglobal.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtversionchecks.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtconfiginclude.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qconfig.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtcore-config.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtconfigmacros.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtdeprecationdefinitions.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcompilerdetection.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qprocessordetection.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qsystemdetection.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtcoreexports.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtdeprecationmarkers.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtclasshelpermacros.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtpreprocessorsupport.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qassert.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtnoop.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtypes.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtversion.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtypeinfo.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcontainerfwd.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qsysinfo.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qlogging.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qflags.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcompare_impl.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qatomic.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qbasicatomic.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qatomic_cxx11.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qgenericatomic.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qyieldcpu.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qconstructormacros.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qdarwinhelpers.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qexceptionhandling.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qforeach.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qttypetraits.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qfunctionpointer.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qglobalstatic.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qmalloc.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qminmax.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qnumeric.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qoverload.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qswap.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtenvironmentvariables.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtresource.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qttranslation.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qversiontagging.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcompare.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qstdlibdetection.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcomparehelpers.h \
-  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/q20type_traits.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/functional \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/binary_negate.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/bind.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/binder1st.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/binder2nd.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/mem_fn.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/mem_fun_ref.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/pointer_to_binary_function.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/pointer_to_unary_function.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/unary_negate.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/function.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/strip_signature.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/boyer_moore_searcher.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/comparison.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/lexicographical_compare_three_way.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/three_way_comp_ref_type.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/vector.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/swap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/ranges_copy_n.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/in_out_result.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/ranges_copy.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/unreachable_sentinel.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__fwd/vector.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/temp_value.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/comparison.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/lexicographical_compare_three_way.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/three_way_comp_ref_type.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/container_traits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/container_traits.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/swap.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/static_bounded_iter.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/is_transparent.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__hash_table \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/can_extract_key.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/remove_const_ref.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/erase_if_container.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/ranges_iterator_traits.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__node_handle \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/default_searcher.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/not_fn.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/perfect_forward.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector_bool.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__bit_reference \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/pmr.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/static_bounded_iter.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/cerrno \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/clocale \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/locale.h \
@@ -839,6 +754,90 @@ CMakeFiles/Ahead.dir/radix_tree_model.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_fsfilcnt_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_types/_nl_item.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/cstdarg \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/QObject \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qobject.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qobjectdefs.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qnamespace.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qglobal.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/assert.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_static_assert.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stdbool.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdbool.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtcoreglobal.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtversionchecks.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtconfiginclude.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qconfig.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtcore-config.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtconfigmacros.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtdeprecationdefinitions.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcompilerdetection.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qprocessordetection.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qsystemdetection.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtcoreexports.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtdeprecationmarkers.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtclasshelpermacros.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtpreprocessorsupport.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qassert.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtnoop.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtypes.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtversion.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtypeinfo.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcontainerfwd.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qsysinfo.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qlogging.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qflags.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcompare_impl.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qatomic.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qbasicatomic.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qatomic_cxx11.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qgenericatomic.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qyieldcpu.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qconstructormacros.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qdarwinhelpers.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qexceptionhandling.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qforeach.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qttypetraits.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qfunctionpointer.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qglobalstatic.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qmalloc.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qminmax.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qnumeric.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qoverload.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qswap.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtenvironmentvariables.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtresource.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qttranslation.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qversiontagging.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcompare.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qstdlibdetection.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qcomparehelpers.h \
+  /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/q20type_traits.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/functional \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/binary_negate.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/bind.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/binder1st.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/binder2nd.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/mem_fn.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/mem_fun_ref.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/pointer_to_binary_function.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/pointer_to_unary_function.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/unary_negate.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/function.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/strip_signature.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/boyer_moore_searcher.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/is_transparent.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__hash_table \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/can_extract_key.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__type_traits/remove_const_ref.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/erase_if_container.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/ranges_iterator_traits.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__node_handle \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/default_searcher.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/not_fn.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/perfect_forward.h \
   /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qtmetamacros.h \
   /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qobjectdefs_impl.h \
   /opt/homebrew/opt/qt/lib/QtCore.framework/Headers/qfunctionaltools_impl.h \

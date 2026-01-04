@@ -31,7 +31,7 @@ void RadixTreeModel::remove(const QString &word) {
 
 void RadixTreeModel::incrementFrequency(const QString &word) {
   if (search(word)) {
-    tree->insert(word.toStdString().c_str()); // Re-insert increments frequency
+    tree->insert(word.toStdString().c_str()); // re-insert bezawed el frequency
   }
 }
 
@@ -40,73 +40,22 @@ RadixTreeModel::getAutocompletions(const QString &prefix) {
   QVector<Suggestion> results;
 
   if (prefix.isEmpty() || tree->empty()) {
+    emit suggestionsReady(results);
     return results;
   }
 
-  Node *current = tree->getRoot();
-  QString builtString = "";
-  int keyLen = prefix.length();
-  int keyIndex = 0;
+  // na2el el call lel RadixTree getSuggestions
+  std::vector<RadixTree::Suggestion> treeSuggestions =
+      tree->getSuggestions(prefix.toStdString().c_str());
 
-  while (keyIndex < keyLen) {
-    QChar edgeChar = prefix[keyIndex];
-    child *ch = current->children;
-    child *found = nullptr;
-
-    while (ch) {
-      if (ch->firstChar == edgeChar.toLatin1()) {
-        found = ch;
-        break;
-      }
-      ch = ch->next;
-    }
-
-    if (!found) {
-      emit suggestionsReady(results); // Clear ghost text
-      return results;
-    }
-
-    QString nodeData = QString::fromStdString(found->node->data);
-    int matched = 0;
-    int nodeLen = nodeData.length();
-
-    while (matched < nodeLen && keyIndex + matched < keyLen &&
-           nodeData[matched] == prefix[keyIndex + matched]) {
-      matched++;
-    }
-
-    if (keyIndex + matched < keyLen && matched < nodeLen) {
-      emit suggestionsReady(results); // Clear ghost text
-      return results;
-    }
-
-    builtString += nodeData;
-    current = found->node;
-    keyIndex += matched;
+  // 7awel le Qt types
+  for (const auto &s : treeSuggestions) {
+    results.append({QString::fromStdString(s.word), s.frequency, s.timestamp});
   }
 
-  collectSuggestions(current, builtString, results);
   std::sort(results.begin(), results.end());
-
   emit suggestionsReady(results);
   return results;
-}
-
-void RadixTreeModel::collectSuggestions(Node *node, const QString &currentWord,
-                                        QVector<Suggestion> &results) {
-  if (!node)
-    return;
-
-  if (node->ended) {
-    results.append({currentWord, node->frequency, node->timestamp});
-  }
-
-  child *ch = node->children;
-  while (ch) {
-    QString nextWord = currentWord + QString::fromStdString(ch->node->data);
-    collectSuggestions(ch->node, nextWord, results);
-    ch = ch->next;
-  }
 }
 
 void RadixTreeModel::loadFromFile(const QString &filePath) {
@@ -151,20 +100,11 @@ void RadixTreeModel::saveMetadata(const QString &filePath) {
     return;
 
   QTextStream out(&file);
-  // Save metadata format: word:frequency
-  QVector<Suggestion> allSuggestions;
-  Node *root = tree->getRoot();
-  if (root) {
-    child *ch = root->children;
-    while (ch) {
-      QString word = QString::fromStdString(ch->node->data);
-      collectSuggestions(ch->node, word, allSuggestions);
-      ch = ch->next;
-    }
-  }
+  // besta5dem getAllSuggestions men el RadixTree
+  std::vector<RadixTree::Suggestion> allSuggestions = tree->getAllSuggestions();
 
   for (const auto &s : allSuggestions) {
-    out << s.word << ":" << s.frequency << "\n";
+    out << QString::fromStdString(s.word) << ":" << s.frequency << "\n";
   }
   file.close();
 }
@@ -183,7 +123,7 @@ void RadixTreeModel::loadMetadata(const QString &filePath) {
       if (parts.size() >= 2) {
         QString word = parts[0];
         int freq = parts[1].toInt();
-        // Set frequency by re-inserting (freq-1) times
+        // zawd el frequency b re-insert (freq-1) mara
         for (int i = 1; i < freq; ++i) {
           tree->insert(word.toStdString().c_str());
         }
@@ -195,20 +135,12 @@ void RadixTreeModel::loadMetadata(const QString &filePath) {
 
 QStringList RadixTreeModel::getAllWords() {
   QStringList words;
-  QVector<Suggestion> suggestions;
 
-  Node *root = tree->getRoot();
-  if (root) {
-    child *ch = root->children;
-    while (ch) {
-      QString word = QString::fromStdString(ch->node->data);
-      collectSuggestions(ch->node, word, suggestions);
-      ch = ch->next;
-    }
-  }
+  // besta5dem getAllSuggestions men el RadixTree
+  std::vector<RadixTree::Suggestion> suggestions = tree->getAllSuggestions();
 
   for (const auto &s : suggestions) {
-    words.append(s.word);
+    words.append(QString::fromStdString(s.word));
   }
   return words;
 }

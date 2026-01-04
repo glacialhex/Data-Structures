@@ -48,9 +48,6 @@ signals:
   void suggestionsReady(const QVector<Suggestion> &suggestions);
 
 private:
-  void collectSuggestions(Node *node, const QString &currentWord,
-                          QVector<Suggestion> &results);
-
   RadixTree *tree;
   int wordCount;
   QString currentFile;

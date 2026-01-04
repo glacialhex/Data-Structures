@@ -73,7 +73,7 @@ Ahead_autogen/timestamp: /opt/homebrew/opt/qt/share/qt/libexec/moc
 Ahead_autogen/timestamp: /opt/homebrew/opt/qt/share/qt/libexec/uic
 Ahead_autogen/timestamp: CMakeFiles/Ahead.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target Ahead"
-	/opt/homebrew/bin/cmake -E cmake_autogen /Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir/AutogenInfo.json ""
+	/opt/homebrew/bin/cmake -E cmake_autogen /Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir/AutogenInfo.json Release
 	/opt/homebrew/bin/cmake -E touch /Users/yousef/Antigravity/Data-Structures/qt_gui/build/Ahead_autogen/timestamp
 
 Ahead_autogen/EWIEGA46WW/qrc_resources.cpp: /Users/yousef/Antigravity/Data-Structures/qt_gui/resources.qrc
@@ -84,7 +84,7 @@ Ahead_autogen/EWIEGA46WW/qrc_resources.cpp: /Users/yousef/Antigravity/Data-Struc
 Ahead_autogen/EWIEGA46WW/qrc_resources.cpp: /opt/homebrew/opt/qt/share/qt/libexec/rcc
 Ahead_autogen/EWIEGA46WW/qrc_resources.cpp: /opt/homebrew/opt/qt/share/qt/libexec/rcc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Automatic RCC for resources.qrc"
-	/opt/homebrew/bin/cmake -E cmake_autorcc /Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json 
+	/opt/homebrew/bin/cmake -E cmake_autorcc /Users/yousef/Antigravity/Data-Structures/qt_gui/build/CMakeFiles/Ahead_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json Release
 
 CMakeFiles/Ahead.dir/codegen:
 .PHONY : CMakeFiles/Ahead.dir/codegen

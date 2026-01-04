@@ -6,7 +6,7 @@ CXX_DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
 
 CXX_INCLUDES = -I/Users/yousef/Antigravity/Data-Structures/qt_gui/build/Ahead_autogen/include -I/Users/yousef/Antigravity/Data-Structures/qt_gui -I/Users/yousef/Antigravity/Data-Structures/qt_gui/.. -isystem /opt/homebrew/opt/qt/lib/QtWidgets.framework/Headers -iframework /opt/homebrew/opt/qt/lib -isystem /opt/homebrew/opt/qt/lib/QtCore.framework/Headers -isystem /opt/homebrew/opt/qt/share/qt/mkspecs/macx-clang -isystem /opt/homebrew/opt/qt/include -isystem /opt/homebrew/opt/qt/lib/QtGui.framework/Headers -isystem /Library/Frameworks/GStreamer.framework/Headers
 
-CXX_FLAGSarm64 = -std=gnu++17 -arch arm64
+CXX_FLAGSarm64 = -O3 -DNDEBUG -std=gnu++17 -arch arm64
 
-CXX_FLAGS = -std=gnu++17 -arch arm64
+CXX_FLAGS = -O3 -DNDEBUG -std=gnu++17 -arch arm64
 
