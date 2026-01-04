@@ -1,97 +1,193 @@
-# ⚡ Ahead - Advanced Autocomplete Engine
-### Efficient Radix Tree Implementation for Real-Time Search
+# 🚀 Ahead - Lightning-Fast Autocomplete
 
-<p align="center">
-  <img src="https://img.shields.io/badge/C%2B%2B-17-00599C?style=for-the-badge&logo=c%2B%2B" alt="C++17">
-  <img src="https://img.shields.io/badge/Qt-6.7-41CD52?style=for-the-badge&logo=qt" alt="Qt 6">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License">
-</p>
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://en.cppreference.com/w/cpp/17)
+[![Qt6](https://img.shields.io/badge/Qt-6.x-41CD52.svg)](https://www.qt.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![macOS](https://img.shields.io/badge/macOS-000000?style=flat&logo=apple&logoColor=white)]()
+[![Windows](https://img.shields.io/badge/Windows-0078D6?style=flat&logo=windows&logoColor=blue)]()
 
----
-
-## 📖 Project Overview
-**Ahead** is a high-performance, real-time autocomplete application built on a custom C++ **Radix Tree** (Compressed Trie). It demonstrates **O(k)** search complexity, making it orders of magnitude faster than standard `std::map` or `BST` approaches for string operations. The project features a modern, responsive GUI built with **Qt 6**.
-
-### 🚀 Key Features
-
-*   **Lightning Fast Search**: Core engine uses a Radix Tree for **O(k)** lookups (where *k* is word length).
-*   **Real-Time Suggestions**: Instant results update as you type.
-*   **Smart Ranking**:
-    *   **Most Used**: Sorts suggestions by frequency of use.
-    *   **Recent**: Tracks session-based search history.
-*   **Ghost Text**: Google-style inline text completion.
-*   **Data Persistence**:
-    *   Loads standard Dictionary text files.
-    *   Saves learned metadata (frequencies) to `.meta` files.
-*   **Cross-Platform**: Runs natively on **macOS** and **Windows**.
+A high-performance autocomplete engine powered by an optimized **Radix Tree** (Patricia Trie) with a beautiful Qt6 GUI. Features ghost-text suggestions, frequency-based ranking, and real-time dictionary management.
 
 ---
 
-## 🛠️ Technical Architecture
+## ✨ Features
 
-### The Radix Tree
-Unlike a standard Trie which stores one character per node, our Radix Tree **compresses** linear paths.
-*   **Space Efficiency**: Shared prefixes (e.g., "internet", "internal") are stored only once.
-*   **Search Efficiency**: Traverses fewer nodes. finding "Apple" takes just 1 step if the node `Root -> Apple` exists.
-
-### Node Structure
-```cpp
-struct Node {
-    char *data;          // Compressed string fragment
-    bool ended;          // Marks if this path ends a valid word
-    int frequency;       // Usage count for ranking
-    long long timestamp; // Last access time for "Recent" sort
-    child *children;     // Linked list of child edges
-};
-```
+| Feature | Description |
+|---------|-------------|
+| ⚡ **Instant Autocomplete** | Sub-millisecond prefix matching |
+| 👻 **Ghost Text** | Inline suggestions as you type (Tab/→ to accept) |
+| 📊 **Frequency Ranking** | Most-used words appear first |
+| � **Recent Searches** | Toggle between "Most Used" or "Recent" history |
+| �💾 **Persistence** | Word frequencies saved across sessions |
+| 🎨 **Modern UI** | Dark theme with glassmorphism effects |
+| ❄️ **Snowflake Effect** | Festive animated background |
 
 ---
 
-## 💻 Build Instructions
+## 🛠️ Building from Source
 
 ### Prerequisites
-*   **C++ Compiler** (Clang, GCC, or MSVC) supporting C++17.
-*   **CMake** (3.16+).
-*   **Qt 6** (Core, Gui, Widgets modules).
 
-### macOS
+| Platform | Requirements |
+|----------|--------------|
+| **macOS** | Xcode Command Line Tools, Homebrew, Qt6 |
+| **Windows** | MinGW-w64, CMake, Qt6 (MinGW build) |
+
+### <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_logo_white.svg" width="20" height="20" /> macOS
+
 ```bash
-# 1. Install Dependencies
-brew install cmake qt@6
+# 1. Install Qt6 via Homebrew
+brew install qt@6
 
-# 2. Clone & Build
+# 2. Clone and build
 git clone https://github.com/glacialhex/Data-Structures.git
 cd Data-Structures/qt_gui
-mkdir build && cd build
-cmake .. -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
-make
 
-# 3. Run
+# 3. Create build directory
+mkdir build && cd build
+
+# 4. Configure with CMake
+cmake .. -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
+
+# 5. Build
+cmake --build .
+
+# 6. Run
 open Ahead.app
 ```
 
-### Windows
+### <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg" width="20" height="20" /> Windows
+
 ```powershell
-# 1. Install Qt6 via Online Installer
-# 2. Clone & Build
+# 1. Install Qt6 with MinGW from https://www.qt.io/download
+#    Select "Qt 6.x.x" -> "MinGW 11.2.0 64-bit" during installation
+# 2. Clone repository
 git clone https://github.com/glacialhex/Data-Structures.git
-cd Data-Structures/qt_gui
-mkdir build; cd build
-cmake .. -DCMAKE_PREFIX_PATH="C:\Qt\6.7.0\msvc2019_64"
-cmake --build . --config Release
+cd Data-Structures\qt_gui
+
+# 3. Create build directory
+mkdir build
+cd build
+
+# 4. Configure with MinGW Makefiles
+cmake .. -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:\Qt\6.6.0\mingw_64"
+
+# 5. Build
+mingw32-make
+
+# 6. Run
+.\Ahead.exe
+```
+
+
+
+---
+
+## 📖 Usage
+
+### Loading a Dictionary
+
+1. Click **📂 Load Dictionary** in the side panel
+2. Select a `.txt` file (one word per line)
+3. Words are indexed immediately
+
+**Sample dictionaries included:**
+- `dictionary.txt` - 5,000+ English words
+- `sample_tech_words.txt` - Technology terms
+- `sample_university_words.txt` - Academic vocabulary
+
+### Autocomplete
+
+1. Start typing in the search box
+2. Ghost text shows the best match
+3. Press **Tab** or **→** to accept
+4. Press **Enter** to confirm and boost frequency
+
+### Sorting Suggestions
+
+Toggle the radio buttons in the main view:
+- **Most Used**: Sorts suggestions by frequency (Popularity).
+- **Recent**: Sorts by your last access time (Session-based).
+
+### Managing Words
+
+| Action | How |
+|--------|-----|
+| Add word | Type in side panel, click "Add Word" |
+| Delete word | Select in list, click "Remove Selected" |
+| Save dictionary | Click **💾 Save Dictionary** |
+
+---
+
+## 📁 Project Structure
+
+```
+Data-Structures/
+├── RadixTree.cpp/h    # Core trie implementation
+├── Node.cpp/h         # Node structure
+├── Main.cpp           # CLI test harness
+├── qt_gui/            # Qt6 GUI application
+│   ├── main_window.*  # Main application window
+│   ├── side_menu.*    # Collapsible side panel
+│   ├── ghost_line_edit.*  # Autocomplete input
+│   ├── snowflake_widget.* # Visual effects
+│   ├── radix_tree_model.* # Qt model wrapper
+│   ├── theme.h        # Color palette
+│   └── assets/        # Logos and images
+├── dictionary.txt     # Sample word list
+└── README.md
 ```
 
 ---
 
-## 👥 Team & Credits
+## 🎓 Credits
 
-**Faculty of Engineering - Ain Shams University**  
-*Computer Engineering Department - 2nd Year Data Structures Project*
+**Ahead** was developed as a Data Structures project by students at:
 
-**Developed By:**
-*   **Yousef Kotp** (Software Engineering & GUI)
-*   **Youssef El-Kholy** (Radix Tree Core)
-*   **Seif El-Din** (Algorithms & Analysis)
-*   **Adham Mohamed** (Testing & QA)
+| University | |
+|------------|--|
+| 🏛️ **Ain Shams University** | Faculty of Computer and Information Sciences |
+| 🏛️ **University of East London** | School of Architecture, Computing and Engineering |
 
-© 2025 Ahead Team. All Rights Reserved.
+**Team Members:**
+- Jana Tarek Nayel (24P0327)
+- Lujain Mohamed Helmi (24P0284)
+- Malak Mostafa Ali (24P0239)
+- Nour Mostafa Melegy (24P0176)
+- Yousef Mohamed Helmy (20P7954)
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+```
+MIT License
+
+Copyright (c) 2025 Ahead Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ and C++17</sub>
+</p>
