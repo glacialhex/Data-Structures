@@ -30,7 +30,7 @@ A high-performance autocomplete engine powered by an optimized **Radix Tree** (P
 | Platform | Requirements |
 |----------|--------------|
 | **macOS** | Xcode Command Line Tools, Homebrew, Qt6 |
-| **Windows** | Visual Studio 2019+, CMake, Qt6 |
+| **Windows** | MinGW-w64, CMake, Qt6 (MinGW build) |
 
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Apple_logo_white.svg" width="20" height="20" /> macOS
 
@@ -58,7 +58,8 @@ open Ahead.app
 ### <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Windows_logo_-_2021.svg" width="20" height="20" /> Windows
 
 ```powershell
-# 1. Install Qt6 from https://www.qt.io/download
+# 1. Install Qt6 with MinGW from https://www.qt.io/download
+#    Select "Qt 6.x.x" -> "MinGW 11.2.0 64-bit" during installation
 # 2. Clone repository
 git clone https://github.com/glacialhex/Data-Structures.git
 cd Data-Structures\qt_gui
@@ -67,14 +68,14 @@ cd Data-Structures\qt_gui
 mkdir build
 cd build
 
-# 4. Configure (adjust Qt path as needed)
-cmake .. -DCMAKE_PREFIX_PATH="C:\Qt\6.x.x\msvc2019_64"
+# 4. Configure with MinGW Makefiles
+cmake .. -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH="C:\Qt\6.6.0\mingw_64"
 
 # 5. Build
-cmake --build . --config Release
+mingw32-make
 
 # 6. Run
-.\Release\Ahead.exe
+.\Ahead.exe
 ```
 
 
