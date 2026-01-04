@@ -1,6 +1,6 @@
 # CMakeLists.txt for Ahead Qt6 GUI
 # El Build configuration - bey7added el Qt we el source files
-# © 2024 Ahead Team - Ain Shams University / UEL
+# 2025 Ahead Team - Ain Shams University / UEL
 
 cmake_minimum_required(VERSION 3.16)
 project(Ahead VERSION 1.0 LANGUAGES CXX)
@@ -10,6 +10,33 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+
+# Windows: Try to find Qt6 in common installation paths if not specified
+if(WIN32 AND NOT DEFINED CMAKE_PREFIX_PATH)
+    # Check common Qt installation paths
+    set(QT_SEARCH_PATHS
+        "C:/Qt/6.6.0/mingw_64"
+        "C:/Qt/6.5.0/mingw_64"
+        "C:/Qt/6.7.0/mingw_64"
+        "C:/Qt/6.8.0/mingw_64"
+        "D:/Qt/6.6.0/mingw_64"
+        "D:/Qt/6.5.0/mingw_64"
+        "$ENV{QT_DIR}"
+        "$ENV{QTDIR}"
+    )
+    foreach(QT_PATH ${QT_SEARCH_PATHS})
+        if(EXISTS "${QT_PATH}/lib/cmake/Qt6")
+            set(CMAKE_PREFIX_PATH "${QT_PATH}")
+            message(STATUS "Found Qt6 at: ${QT_PATH}")
+            break()
+        endif()
+    endforeach()
+    
+    if(NOT CMAKE_PREFIX_PATH)
+        message(WARNING "Qt6 not found automatically. Please set CMAKE_PREFIX_PATH to your Qt6 MinGW installation path.")
+        message(WARNING "Example: cmake .. -DCMAKE_PREFIX_PATH=\"C:/Qt/6.6.0/mingw_64\"")
+    endif()
+endif()
 
 # Find Qt6
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
