@@ -12,7 +12,7 @@
  *                                                                            *
  ******************************************************************************
  *                                                                            *
- *  Copyright Ⓒ 2025 - Faculty of Engineering, Ain Shams University          *
+ *  Copyright Ⓒ 2026 - Faculty of Engineering, Ain Shams University          *
  *  All Rights Reserved to the students and the university.                   *
  *                                                                            *
  *  Project: Radix Tree Data Structure                                        *
@@ -205,7 +205,7 @@ bool RadixTree::search(const char *key) {
 
     while (ch) { // loop el child searching
       if (ch->firstChar ==
-          edgeChar) { // firChar m3molaha cache f struct child for efficiency
+          edgeChar) { // firstChar m3molaha cache f struct child for efficiency
                       // and avoid defereincing repeatedly
         found = ch;
         break; // found fa stip searching
