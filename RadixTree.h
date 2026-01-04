@@ -25,6 +25,9 @@ public:
 
   // Autocomplete - el ektmal el tol2a2y
   void getAutocompletions(const char *prefix); // geb kol el suggestions
+  void autoSuggest(const char *prefix);        // el autocomplete el gdeed
+  void collectWords(Node *node,
+                    const std::string &prefix); // collect recursively
   void collectAllWords(Node *node,
                        std::string currentString); // collect kol el kalemat
   // Search / Lookup - el dawran w el search

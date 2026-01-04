@@ -283,69 +283,73 @@ void RadixTree::handleSearchFailure(const char *reason) {
 
 // ================ AUTOCOMPLETE (OPTIMIZED) ================
 
-void RadixTree::collectAllWords(Node *node, string currentString) { // Jana
-  if (node == nullptr)
+// Helper function - collects all words recursively
+void RadixTree::collectWords(Node *node, const std::string &prefix) {
+  if (!node)
     return;
 
-  // If this node marks the end of a word, print
+  std::string newPrefix = prefix + node->data; // Safe string concatenation
+
   if (node->ended) {
-    cout << "- " << currentString << endl;
+    cout << newPrefix << endl;
   }
 
-  // Go through all children
-  child *track = node->children;
-  while (track != nullptr) {
-    string nextString = currentString + string(track->node->data);
-    collectAllWords(track->node, nextString);
-    track = track->next;
+  child *ch = node->children;
+  while (ch) {
+    collectWords(ch->node, newPrefix);
+    ch = ch->next;
   }
 }
 
-void RadixTree::getAutocompletions(const char *prefix) { // Jana - Refactored
-  // Sentinel root simplified everything
-  Node *current = myRoot;
-  string builtString = "";
-  int keyLen = strlen(prefix);
-  int keyIndex = 0;
+// Kept for API compatibility - calls collectWords
+void RadixTree::collectAllWords(Node *node, string currentString) {
+  collectWords(node, currentString);
+}
 
-  while (keyIndex < keyLen) {
-    char edgeChar = prefix[keyIndex];
+// Main autoSuggest function - el autocomplete
+void RadixTree::autoSuggest(const char *prefix) {
+  if (empty()) {
+    cout << "Tree is empty. No suggestions available." << endl;
+    return;
+  }
+
+  Node *current = myRoot; // Sentinel root (always empty data)
+  int index = 0;
+  int prefixLength = strlen(prefix);
+
+  // Traverse through children to match the entire prefix
+  while (index < prefixLength) {
     child *ch = current->children;
-    child *found = nullptr;
+    Node *nextNode = nullptr;
+    int matchedLen = 0;
 
+    // Find child with matching first character
     while (ch) {
-      if (ch->firstChar == edgeChar) {
-        found = ch;
-        break;
+      if (ch->firstChar == prefix[index]) {
+        nextNode = ch->node;
+        matchedLen = matchPrefix(nextNode->data, prefix + index);
+        if (matchedLen > 0) {
+          break;
+        }
       }
       ch = ch->next;
     }
 
-    if (!found) {
-      cout << "No suggestions found." << endl;
+    if (nextNode == nullptr || matchedLen == 0) {
+      cout << "No suggestions found for the given prefix." << endl;
       return;
     }
 
-    int matched = matchPrefix(found->node->data, prefix + keyIndex);
-    // If we consumed more of prefix than matched, mismatch
-    if (keyIndex + matched < keyLen && matched < strlen(found->node->data)) {
-      cout << "No suggestions found." << endl;
-      return;
-    }
-
-    builtString += found->node->data;
-    current = found->node;
-    keyIndex += matched;
+    index += matchedLen;
+    current = nextNode;
   }
 
-  // Correct the built string if we overshot (not really needed if suffix is
-  // collecting) Actually, builtString accumulates full node data. If prefix
-  // matched partially into node, we wanted that full node for suggestions.
-  // Example: Prefix "ca", Node "cart". Matched "ca". keyIndex done. builtstring
-  // "cart". Correct.
-
-  collectAllWords(current, builtString);
+  // Collect and display all words with this prefix
+  collectWords(current, "");
 }
+
+// Wrapper for GUI compatibility - el wrapper lel Qt GUI
+void RadixTree::getAutocompletions(const char *prefix) { autoSuggest(prefix); }
 
 // ================ DELETION ================
 // Updated to handle sentinel root
