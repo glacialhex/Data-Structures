@@ -149,16 +149,20 @@ void MainWindow::setupUI() {
   sortByFrequency = new QRadioButton("Most Used");
   sortByFrequency->setChecked(true);
   sortByFrequency->setStyleSheet(
-      QString("QRadioButton { color: %1; font-size: 12px; }"
-              "QRadioButton::indicator { width: 14px; height: 14px; }")
-          .arg(Colors::TEXT_PRIMARY));
+      QString("QRadioButton { color: %1; font-size: 12px; spacing: 5px; }"
+              "QRadioButton::indicator { width: 16px; height: 16px; border: "
+              "2px solid %2; border-radius: 9px; background: transparent; }"
+              "QRadioButton::indicator:checked { background: %2; }")
+          .arg(Colors::TEXT_PRIMARY, Colors::PRIMARY));
   suggestionsHeaderLayout->addWidget(sortByFrequency);
 
   sortByRecent = new QRadioButton("Recent");
   sortByRecent->setStyleSheet(
-      QString("QRadioButton { color: %1; font-size: 12px; }"
-              "QRadioButton::indicator { width: 14px; height: 14px; }")
-          .arg(Colors::TEXT_PRIMARY));
+      QString("QRadioButton { color: %1; font-size: 12px; spacing: 5px; }"
+              "QRadioButton::indicator { width: 16px; height: 16px; border: "
+              "2px solid %2; border-radius: 9px; background: transparent; }"
+              "QRadioButton::indicator:checked { background: %2; }")
+          .arg(Colors::TEXT_PRIMARY, Colors::PRIMARY));
   suggestionsHeaderLayout->addWidget(sortByRecent);
 
   contentLayout->addLayout(suggestionsHeaderLayout);
@@ -325,7 +329,7 @@ void MainWindow::connectSignals() {
 
 void MainWindow::onTextChanged(const QString &text) {
   if (text.isEmpty()) {
-    suggestionsList->clear();
+    showRecentSearches();
     searchBox->clearGhost();
     return;
   }
@@ -346,6 +350,14 @@ void MainWindow::onSearchEnterPressed() {
   if (!word.isEmpty()) {
     if (model->search(word)) {
       model->incrementFrequency(word);
+
+      // Add to recent searches (session-based)
+      recentSearches.removeAll(word); // Remove if exists to move to front
+      recentSearches.prepend(word);
+      if (recentSearches.size() > MAX_RECENT_SEARCHES) {
+        recentSearches.removeLast();
+      }
+
       // REAL-TIME: Refresh suggestions to show updated frequency
       model->getAutocompletions(word);
       statusBar()->setStyleSheet(
@@ -415,4 +427,24 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     model->saveMetadata(currentFile);
   }
   event->accept();
+}
+
+// Show recent searches when search box is empty - el recent searches
+void MainWindow::showRecentSearches() {
+  suggestionsList->clear();
+
+  if (recentSearches.isEmpty()) {
+    return; // No recent searches to show
+  }
+
+  // Add header item (non-selectable)
+  QListWidgetItem *header = new QListWidgetItem("🕐 Recent Searches");
+  header->setFlags(header->flags() & ~Qt::ItemIsSelectable);
+  header->setForeground(QColor(Colors::TEXT_SECONDARY));
+  suggestionsList->addItem(header);
+
+  // Add recent searches
+  for (const QString &word : recentSearches) {
+    suggestionsList->addItem(word);
+  }
 }
