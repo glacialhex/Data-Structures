@@ -129,12 +129,42 @@ void MainWindow::setupUI() {
           .arg(Colors::TEXT_SECONDARY));
   contentLayout->addWidget(hintLabel);
 
-  // Suggestions label
+  // Suggestions label with sort options
+  QHBoxLayout *suggestionsHeaderLayout = new QHBoxLayout();
+
   QLabel *suggestionsLabel = new QLabel("Suggestions");
   suggestionsLabel->setStyleSheet(
       QString("QLabel { color: %1; font-size: 16px; font-weight: bold; }")
           .arg(Colors::TEXT_PRIMARY));
-  contentLayout->addWidget(suggestionsLabel);
+  suggestionsHeaderLayout->addWidget(suggestionsLabel);
+
+  suggestionsHeaderLayout->addStretch();
+
+  // Sort mode radio buttons - el sort options
+  QLabel *sortLabel = new QLabel("Sort:");
+  sortLabel->setStyleSheet(QString("QLabel { color: %1; font-size: 12px; }")
+                               .arg(Colors::TEXT_SECONDARY));
+  suggestionsHeaderLayout->addWidget(sortLabel);
+
+  sortByFrequency = new QRadioButton("Most Used");
+  sortByFrequency->setChecked(true);
+  sortByFrequency->setStyleSheet(
+      QString("QRadioButton { color: %1; font-size: 12px; }"
+              "QRadioButton::indicator { width: 14px; height: 14px; }")
+          .arg(Colors::TEXT_PRIMARY));
+  suggestionsHeaderLayout->addWidget(sortByFrequency);
+
+  sortByRecent = new QRadioButton("Recent");
+  sortByRecent->setStyleSheet(
+      QString("QRadioButton { color: %1; font-size: 12px; }"
+              "QRadioButton::indicator { width: 14px; height: 14px; }")
+          .arg(Colors::TEXT_PRIMARY));
+  suggestionsHeaderLayout->addWidget(sortByRecent);
+
+  contentLayout->addLayout(suggestionsHeaderLayout);
+
+  // Initialize sort mode
+  sortMode = RadixTreeModel::ByFrequency;
 
   // Suggestions list - el list bta3t el suggestions
   suggestionsList = new QListWidget();
@@ -238,16 +268,49 @@ void MainWindow::connectSignals() {
   connect(model, &RadixTreeModel::suggestionsReady,
           [this](const QVector<RadixTreeModel::Suggestion> &suggestions) {
             suggestionsList->clear();
-            for (const auto &s : suggestions) {
+
+            // Sort based on current mode
+            QVector<RadixTreeModel::Suggestion> sortedSuggestions = suggestions;
+            if (sortMode == RadixTreeModel::ByRecent) {
+              std::sort(sortedSuggestions.begin(), sortedSuggestions.end(),
+                        [](const RadixTreeModel::Suggestion &a,
+                           const RadixTreeModel::Suggestion &b) {
+                          return a.timestamp > b.timestamp; // Most recent first
+                        });
+            } else {
+              std::sort(sortedSuggestions.begin(),
+                        sortedSuggestions.end()); // By frequency (default)
+            }
+
+            for (const auto &s : sortedSuggestions) {
               suggestionsList->addItem(
                   QString("%1 (%2)").arg(s.word).arg(s.frequency));
             }
-            if (!suggestions.isEmpty()) {
-              searchBox->setGhostText(suggestions.first().word);
+            if (!sortedSuggestions.isEmpty()) {
+              searchBox->setGhostText(sortedSuggestions.first().word);
             } else {
               searchBox->clearGhost();
             }
           });
+
+  // Sort mode radio buttons - refresh on change
+  connect(sortByFrequency, &QRadioButton::toggled, [this](bool checked) {
+    if (checked) {
+      sortMode = RadixTreeModel::ByFrequency;
+      if (!searchBox->text().isEmpty()) {
+        model->getAutocompletions(searchBox->text()); // Refresh
+      }
+    }
+  });
+
+  connect(sortByRecent, &QRadioButton::toggled, [this](bool checked) {
+    if (checked) {
+      sortMode = RadixTreeModel::ByRecent;
+      if (!searchBox->text().isEmpty()) {
+        model->getAutocompletions(searchBox->text()); // Refresh
+      }
+    }
+  });
 
   // Status manager
   connect(statusManager, &StatusManager::messageChanged,

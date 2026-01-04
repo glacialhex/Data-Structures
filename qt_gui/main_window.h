@@ -3,12 +3,12 @@
 // © 2025 Ahead Team - Ain Shams / UEL
 #pragma once
 
+#include "radix_tree_model.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QMainWindow>
-
-class RadixTreeModel;
+#include <QRadioButton>
 class SideMenu;
 class SnowflakeWidget;
 class GhostLineEdit;
@@ -46,4 +46,9 @@ private:
   QListWidget *suggestionsList;
   QLabel *logoLabel;
   QString currentFile;
+
+  // Sort mode for suggestions
+  RadixTreeModel::SortMode sortMode;
+  QRadioButton *sortByFrequency;
+  QRadioButton *sortByRecent;
 };

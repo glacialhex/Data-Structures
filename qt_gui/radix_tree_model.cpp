@@ -98,7 +98,7 @@ void RadixTreeModel::collectSuggestions(Node *node, const QString &currentWord,
     return;
 
   if (node->ended) {
-    results.append({currentWord, node->frequency});
+    results.append({currentWord, node->frequency, node->timestamp});
   }
 
   child *ch = node->children;

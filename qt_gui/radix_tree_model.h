@@ -13,9 +13,15 @@ class RadixTreeModel : public QObject {
   Q_OBJECT
 
 public:
+  // Sort mode for suggestions
+  enum SortMode { ByFrequency, ByRecent };
+
   struct Suggestion {
     QString word;
     int frequency;
+    long long timestamp; // For recent searches feature
+
+    // Default sort by frequency
     bool operator<(const Suggestion &other) const {
       return frequency > other.frequency; // Descending
     }
